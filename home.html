@@ -226,6 +226,7 @@
             <div class="status">🚀 MVP версия</div>
             <div class="status">🎯 Интерактивные диалоги</div>
             <div class="status">🎤 Распознавание речи</div>
+            <div class="status">🔊 Озвучивание</div>
         </div>
         
         <div class="demo-section">
@@ -291,9 +292,9 @@
                     <p>ИИ анализирует ваше произношение</p>
                 </div>
                 <div style="text-align: center; padding: 20px;">
-                    <div style="font-size: 3em; margin-bottom: 10px;">🤖</div>
-                    <h4>ИИ-помощник</h4>
-                    <p>Персонализированная обратная связь</p>
+                    <div style="font-size: 3em; margin-bottom: 10px;">🔊</div>
+                    <h4>Озвучивание</h4>
+                    <p>Слушайте правильное произношение</p>
                 </div>
                 <div style="text-align: center; padding: 20px;">
                     <div style="font-size: 3em; margin-bottom: 10px;">🌍</div>
@@ -349,6 +350,34 @@
             }
         };
         
+        // Функция озвучивания текста
+        function speakText(text) {
+            window.speechSynthesis.cancel();
+            
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'ru-RU';
+            utterance.rate = 0.8; // Медленнее для изучающих
+            utterance.pitch = 1.0;
+            utterance.volume = 1.0;
+            
+            const voices = window.speechSynthesis.getVoices();
+            const russianVoice = voices.find(voice => voice.lang.includes('ru'));
+            if (russianVoice) {
+                utterance.voice = russianVoice;
+            }
+            
+            window.speechSynthesis.speak(utterance);
+        }
+        
+        // Кнопка для повторного озвучивания
+        function repeatAudio() {
+            if (currentScenario) {
+                const scenario = scenarios[currentScenario];
+                const currentDialogue = scenario.dialogues[dialogueStep];
+                speakText(currentDialogue.text);
+            }
+        }
+        
         // Инициализация распознавания речи
         function initSpeechRecognition() {
             if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
@@ -392,6 +421,7 @@
                 <div style="background: rgba(255,255,255,0.2); padding: 20px; border-radius: 10px; margin: 20px 0;">
                     <p>🎯 <strong>Ваша цель:</strong> Пройти весь диалог, правильно отвечая на вопросы</p>
                     <p>🎤 <strong>Инструкция:</strong> Нажмите кнопку микрофона и говорите по-русски</p>
+                    <p>🔊 <strong>Озвучивание:</strong> Персонаж автоматически произнесет свою реплику</p>
                 </div>
             `;
             virtualSpace.classList.add('active');
@@ -411,6 +441,11 @@
             document.querySelector('.character').textContent = scenario.character;
             document.getElementById('speakerName').textContent = currentDialogue.speaker + ':';
             document.getElementById('dialogueText').textContent = currentDialogue.text;
+            
+            // АВТОМАТИЧЕСКОЕ ОЗВУЧИВАНИЕ
+            setTimeout(() => {
+                speakText(currentDialogue.text);
+            }, 500); // Небольшая задержка для плавности
         }
         
         function updateProgress() {
@@ -477,7 +512,7 @@
             `;
             document.getElementById('feedback').classList.remove('hidden');
             
-            // Эффект конфетти (эмуляция)
+            // Эффект конфетти
             const virtualSpace = document.getElementById('virtualSpace');
             virtualSpace.innerHTML += '<div style="text-align: center; font-size: 3em; margin: 20px;">🎉🎊🏆🎊🎉</div>';
         }
@@ -506,6 +541,13 @@
                 document.getElementById('micBtn').innerHTML = '❌';
                 document.getElementById('micBtn').disabled = true;
                 document.getElementById('micBtn').title = 'Распознавание речи не поддерживается в этом браузере';
+            }
+            
+            // Загрузить голоса для синтеза речи
+            if (window.speechSynthesis.onvoiceschanged !== undefined) {
+                window.speechSynthesis.onvoiceschanged = function() {
+                    // Голоса загружены
+                };
             }
         });
     </script>
