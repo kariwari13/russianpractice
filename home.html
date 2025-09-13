@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Russian Phonetic Course</title>
+    <title>Russian Sounds Made Easy</title>
     <style>
         * {
             margin: 0;
@@ -13,7 +13,7 @@
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             color: white;
         }
@@ -24,149 +24,143 @@
             padding: 20px;
         }
         
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-        
-        .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            color: white;
-        }
-        
-        .syllable-header {
-            background: white;
+        .lesson-step {
+            background: rgba(255,255,255,0.95);
             color: #2c3e50;
-            padding: 20px;
-            border-radius: 15px;
+            border-radius: 20px;
+            padding: 40px;
+            margin: 30px 0;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        }
+        
+        .intro-text {
+            font-size: 1.3em;
+            line-height: 1.6;
             text-align: center;
             margin-bottom: 30px;
-            font-size: 1.5em;
-            font-weight: bold;
         }
         
-        .syllable-examples {
+        .sound-showcase {
             display: flex;
             justify-content: center;
-            gap: 40px;
+            gap: 30px;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+        
+        .sound-letter {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 4px solid transparent;
+        }
+        
+        .sound-letter:hover {
+            transform: scale(1.1);
+            border-color: #f39c12;
+        }
+        
+        .current-focus {
+            background: #2c3e50;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .big-sound {
+            font-size: 4em;
+            font-weight: bold;
+            color: #e74c3c;
+            margin: 20px 0;
+        }
+        
+        .syllable-progression {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
             margin: 30px 0;
             flex-wrap: wrap;
         }
         
-        .syllable-group {
-            text-align: center;
-        }
-        
-        .syllable-text {
-            font-size: 2em;
-            font-weight: bold;
-            margin-bottom: 15px;
-            color: #ecf0f1;
-        }
-        
-        .word-with-image {
-            background: white;
+        .syllable-card {
+            background: #ecf0f1;
+            border: 3px solid #bdc3c7;
             border-radius: 15px;
             padding: 20px;
-            margin: 10px 0;
-            color: #2c3e50;
-        }
-        
-        .word-image {
-            width: 120px;
-            height: 120px;
-            background: #ecf0f1;
-            border-radius: 10px;
-            margin: 0 auto 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3em;
-            border: 3px solid #ddd;
-        }
-        
-        .word-text {
-            font-size: 1.3em;
-            font-weight: bold;
-            text-align: center;
-        }
-        
-        .sound-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-            gap: 20px;
-            margin: 30px 0;
-        }
-        
-        .sound-card {
-            background: white;
-            color: #2c3e50;
-            border-radius: 15px;
-            padding: 25px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s;
-            border: 3px solid transparent;
+            min-width: 100px;
         }
         
-        .sound-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
-            border-color: #3498db;
-        }
-        
-        .sound-card.active {
+        .syllable-card:hover {
             background: #3498db;
             color: white;
             border-color: #2980b9;
+            transform: translateY(-5px);
         }
         
-        .sound-letter {
-            font-size: 2.5em;
+        .syllable-text {
+            font-size: 1.8em;
             font-weight: bold;
             margin-bottom: 10px;
         }
         
-        .sound-example {
-            font-size: 0.9em;
-            opacity: 0.7;
+        .word-showcase {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .word-image {
+            width: 150px;
+            height: 150px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 20px;
+            margin: 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4em;
+            border: 3px solid rgba(255,255,255,0.3);
+        }
+        
+        .word-text {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        
+        .stress-explanation {
+            background: #f39c12;
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 25px 0;
+            font-size: 1.1em;
+            line-height: 1.5;
         }
         
         .controls {
             text-align: center;
-            margin: 40px 0;
-        }
-        
-        .instruction {
-            background: rgba(255,255,255,0.1);
-            border-radius: 10px;
-            padding: 20px;
-            margin: 20px 0;
-            text-align: center;
-            font-size: 1.1em;
+            margin: 30px 0;
         }
         
         .play-btn {
-            background: #e74c3c;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 80px;
-            height: 80px;
-            font-size: 2em;
-            cursor: pointer;
-            margin: 0 10px;
-            transition: all 0.3s;
-        }
-        
-        .play-btn:hover {
-            background: #c0392b;
-            transform: scale(1.1);
-        }
-        
-        .microphone-btn {
-            background: #e67e22;
+            background: #27ae60;
             color: white;
             border: none;
             border-radius: 50%;
@@ -174,44 +168,49 @@
             height: 100px;
             font-size: 2.5em;
             cursor: pointer;
-            margin: 20px;
+            margin: 10px;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .play-btn:hover {
+            background: #2ecc71;
+            transform: scale(1.1);
+        }
+        
+        .instruction-text {
+            background: rgba(52, 152, 219, 0.1);
+            border-left: 4px solid #3498db;
+            padding: 20px;
+            margin: 20px 0;
+            font-size: 1.1em;
+            border-radius: 5px;
+        }
+        
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .step-dot {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: #bdc3c7;
             transition: all 0.3s;
         }
         
-        .microphone-btn.recording {
-            background: #27ae60;
-            animation: pulse 1s infinite;
-        }
-        
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-        
-        .feedback {
-            background: rgba(46, 204, 113, 0.2);
-            border: 2px solid #2ecc71;
-            border-radius: 10px;
-            padding: 20px;
-            margin: 20px 0;
-            text-align: center;
-        }
-        
-        .feedback.error {
-            background: rgba(231, 76, 60, 0.2);
-            border-color: #e74c3c;
-        }
-        
-        .hidden {
-            display: none;
+        .step-dot.active {
+            background: #3498db;
+            transform: scale(1.3);
         }
         
         .navigation {
             display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin: 30px 0;
+            justify-content: space-between;
+            margin: 40px 0;
         }
         
         .nav-btn {
@@ -221,130 +220,271 @@
             padding: 15px 30px;
             border-radius: 25px;
             cursor: pointer;
-            font-size: 1em;
+            font-size: 1.1em;
             transition: all 0.3s;
         }
         
         .nav-btn:hover {
             background: #2c3e50;
+            transform: translateY(-2px);
         }
         
         .nav-btn:disabled {
-            background: #7f8c8d;
+            background: #95a5a6;
             cursor: not-allowed;
+            transform: none;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .funny-comment {
+            background: #9b59b6;
+            color: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            font-style: italic;
+            text-align: center;
+            font-size: 1.1em;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>1 SYLLABLE - 1 TA</h1>
+        <!-- Step 1: Introduction -->
+        <div id="step1" class="lesson-step">
+            <div class="intro-text">
+                Learning to read and write Russian is actually quite easy! We're going to start right now. 
+                Let's begin with a group of letters that look and sound pretty similar to the Latin alphabet.
+            </div>
+            
+            <div class="sound-showcase">
+                <div class="sound-letter" onclick="playIntroSound('А')">А</div>
+                <div class="sound-letter" onclick="playIntroSound('М')">М</div>
+                <div class="sound-letter" onclick="playIntroSound('К')">К</div>
+                <div class="sound-letter" onclick="playIntroSound('Т')">Т</div>
+                <div class="sound-letter" onclick="playIntroSound('О')">О</div>
+                <div class="sound-letter" onclick="playIntroSound('Е')">Е</div>
+            </div>
+            
+            <div class="controls">
+                <button class="play-btn" onclick="playIntroduction()">🔊</button>
+                <p>Click to hear introduction</p>
+            </div>
         </div>
-        
-        <div class="syllable-examples">
-            <div class="syllable-group">
-                <div class="syllable-text">МÁМА ТÁ-ТА</div>
-                <div class="word-with-image">
-                    <div class="word-image">👩‍👧</div>
-                    <div class="word-text">МÁМА</div>
+
+        <!-- Step 2: Sound А -->
+        <div id="step2" class="lesson-step hidden">
+            <div class="instruction-text">
+                Now try to repeat this Russian sound
+            </div>
+            
+            <div class="current-focus">
+                <div class="big-sound">А</div>
+                <button class="play-btn" onclick="playCustomSound('А')">🔊</button>
+                <p>Your recorded sound А</p>
+            </div>
+        </div>
+
+        <!-- Step 3: Sound М and МА -->
+        <div id="step3" class="lesson-step hidden">
+            <div class="current-focus">
+                <div class="big-sound">М</div>
+                <button class="play-btn" onclick="playCustomSound('М')">🔊</button>
+                <p>Your recorded sound М</p>
+            </div>
+            
+            <div class="syllable-progression">
+                <div class="syllable-card" onclick="playElevenLabsSound('ма́')">
+                    <div class="syllable-text">МА́</div>
+                </div>
+                <div class="syllable-card" onclick="playElevenLabsSound('ма́ма')">
+                    <div class="syllable-text">МА́МА</div>
                 </div>
             </div>
             
-            <div class="syllable-group">
-                <div class="syllable-text">ТОМÁТ ТА-ТÁ</div>
-                <div class="word-with-image">
-                    <div class="word-image">🍅</div>
-                    <div class="word-text">ТОМÁТ</div>
+            <div class="funny-comment">
+                Congratulations! You just said your first Russian word - and it's probably the most important word in any language! 😊
+            </div>
+            
+            <div class="stress-explanation">
+                Notice the stress mark (́) on МА́МА? Russian stress is super important - it's like the GPS for your tongue! 
+                The stressed syllable is pronounced clearly, while unstressed ones become a bit lazy.
+            </div>
+        </div>
+
+        <!-- Step 4: Sound К and КАКА, МАКАКА -->
+        <div id="step4" class="lesson-step hidden">
+            <div class="current-focus">
+                <div class="big-sound">К</div>
+                <button class="play-btn" onclick="playCustomSound('К')">🔊</button>
+                <p>Your recorded sound К</p>
+            </div>
+            
+            <div class="syllable-progression">
+                <div class="syllable-card" onclick="playElevenLabsSound('ка')">
+                    <div class="syllable-text">КА</div>
+                </div>
+                <div class="syllable-card" onclick="playElevenLabsSound('ка́ка')">
+                    <div class="syllable-text">КА́КА</div>
+                </div>
+                <div class="syllable-card" onclick="playElevenLabsSound('мака́ка')">
+                    <div class="syllable-text">МАКА́КА</div>
                 </div>
             </div>
             
-            <div class="syllable-group">
-                <div class="syllable-text">КОМÉТА ТА-ТÁ-ТА</div>
-                <div class="word-with-image">
-                    <div class="word-image">☄️</div>
-                    <div class="word-text">КОМÉТА</div>
+            <div class="funny-comment">
+                Well, that escalated quickly! From "mama" to "monkey" in just a few sounds! 🐒
+            </div>
+        </div>
+
+        <!-- Step 5: Sound О and combinations -->
+        <div id="step5" class="lesson-step hidden">
+            <div class="current-focus">
+                <div class="big-sound">О</div>
+                <button class="play-btn" onclick="playCustomSound('О')">🔊</button>
+                <p>Your recorded sound О</p>
+            </div>
+            
+            <div class="syllable-progression">
+                <div class="syllable-card" onclick="playElevenLabsSound('мо')">
+                    <div class="syllable-text">МО</div>
+                </div>
+                <div class="syllable-card" onclick="playElevenLabsSound('ко')">
+                    <div class="syllable-text">КО</div>
+                </div>
+                <div class="syllable-card" onclick="playElevenLabsSound('ко́ма')">
+                    <div class="syllable-text">КО́МА</div>
                 </div>
             </div>
-        </div>
-        
-        <div class="syllable-header">
-            Listen and repeat
-        </div>
-        
-        <div class="instruction">
-            <p>Click on each sound to hear it, then try to repeat it using the microphone</p>
-        </div>
-        
-        <div class="sound-grid">
-            <div class="sound-card" onclick="playSound('А')" data-sound="А">
-                <div class="sound-letter">А</div>
-                <div class="sound-example">КА-ТА-МА</div>
-            </div>
-            <div class="sound-card" onclick="playSound('К')" data-sound="К">
-                <div class="sound-letter">К</div>
-            </div>
-            <div class="sound-card" onclick="playSound('М')" data-sound="М">
-                <div class="sound-letter">М</div>
-            </div>
-            <div class="sound-card" onclick="playSound('Т')" data-sound="Т">
-                <div class="sound-letter">Т</div>
-            </div>
-            <div class="sound-card" onclick="playSound('О')" data-sound="О">
-                <div class="sound-letter">О</div>
-            </div>
-            <div class="sound-card" onclick="playSound('Е')" data-sound="Е">
-                <div class="sound-letter">Е</div>
+            
+            <div class="stress-explanation">
+                Here's a fun fact about Russian О: when it's not stressed, it sounds more like "а"! 
+                So КОМА sounds like "КА-ма" in fast speech. Russian vowels love to be dramatic! 🎭
             </div>
         </div>
-        
-        <div class="controls">
-            <button class="play-btn" onclick="playCurrentSound()" title="Play current sound">🔊</button>
-            <button id="micBtn" class="microphone-btn" onclick="startRecording()" title="Record your pronunciation">🎤</button>
+
+        <!-- Step 6: Sound Т and ТОМ -->
+        <div id="step6" class="lesson-step hidden">
+            <div class="current-focus">
+                <div class="big-sound">Т</div>
+                <button class="play-btn" onclick="playCustomSound('Т')">🔊</button>
+                <p>Your recorded sound Т</p>
+            </div>
+            
+            <div class="syllable-progression">
+                <div class="syllable-card" onclick="playElevenLabsSound('то')">
+                    <div class="syllable-text">ТО</div>
+                </div>
+                <div class="syllable-card" onclick="playElevenLabsSound('та')">
+                    <div class="syllable-text">ТА</div>
+                </div>
+            </div>
+            
+            <div class="word-showcase">
+                <div class="word-image">🐱</div>
+                <div class="word-text">ТОМ</div>
+                <button class="play-btn" onclick="playElevenLabsSound('том')">🔊</button>
+                <p>Meet Tom the Cat!</p>
+            </div>
+            
+            <div class="funny-comment">
+                Tom the Cat speaks Russian now! He's probably plotting world domination in Cyrillic! 😸
+            </div>
         </div>
-        
-        <div id="feedback" class="feedback hidden">
-            <p id="feedbackText"></p>
+
+        <!-- Step 7: Sound Е and ТЕМА -->
+        <div id="step7" class="lesson-step hidden">
+            <div class="current-focus">
+                <div class="big-sound">Е</div>
+                <button class="play-btn" onclick="playCustomSound('Е')">🔊</button>
+                <p>Your recorded sound Е</p>
+            </div>
+            
+            <div class="syllable-progression">
+                <div class="syllable-card" onclick="playElevenLabsSound('ме')">
+                    <div class="syllable-text">МЕ</div>
+                </div>
+                <div class="syllable-card" onclick="playElevenLabsSound('те')">
+                    <div class="syllable-text">ТЕ</div>
+                </div>
+                <div class="syllable-card" onclick="playElevenLabsSound('ке')">
+                    <div class="syllable-text">КЕ</div>
+                </div>
+                <div class="syllable-card" onclick="playElevenLabsSound('те́ма')">
+                    <div class="syllable-text">ТЕ́МА</div>
+                </div>
+            </div>
+            
+            <div class="funny-comment">
+                ТЕМА means "theme" or "topic" - and guess what? The theme of today is "you're doing amazing!" 🎉
+            </div>
         </div>
-        
+
+        <!-- Navigation -->
         <div class="navigation">
-            <button class="nav-btn" onclick="previousSound()">⬅ Previous</button>
-            <button class="nav-btn" onclick="nextSound()">Next ➡</button>
+            <button class="nav-btn" onclick="previousStep()" id="prevBtn" disabled>← Previous</button>
+            <div class="step-indicator" id="stepIndicator"></div>
+            <button class="nav-btn" onclick="nextStep()" id="nextBtn">Next →</button>
         </div>
     </div>
     
     <script>
-        // ElevenLabs Configuration
+        // Configuration
         const ELEVENLABS_API_KEY = 'sk_65a1ba422c3245fc8cca3df62a85b603727e749448b7f252';
-        const VOICE_ID = 'EXAVITQu4vr4xnSDxMaL'; // Female Russian voice
+        const VOICE_ID = 'EXAVITQu4vr4xnSDxMaL';
         
-        let currentSoundIndex = 0;
-        let isRecording = false;
-        let recognition = null;
+        let currentStep = 1;
+        const totalSteps = 7;
         
-        const sounds = ['А', 'К', 'М', 'Т', 'О', 'Е'];
+        // Initialize step indicators
+        function initStepIndicators() {
+            const indicator = document.getElementById('stepIndicator');
+            for (let i = 1; i <= totalSteps; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'step-dot';
+                if (i === 1) dot.classList.add('active');
+                indicator.appendChild(dot);
+            }
+        }
         
-        // Custom audio files for pure sounds (you'll need to record these)
-        const soundFiles = {
-            'А': 'audio/a.mp3',
-            'К': 'audio/k.mp3', 
-            'М': 'audio/m.mp3',
-            'Т': 'audio/t.mp3',
-            'О': 'audio/o.mp3',
-            'Е': 'audio/e.mp3'
-        };
+        // Update step indicators
+        function updateStepIndicators() {
+            const dots = document.querySelectorAll('.step-dot');
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index + 1 === currentStep);
+            });
+        }
         
-        // Instructions in English
-        const instructions = {
-            'А': "Now try to repeat the Russian sound А",
-            'К': "Listen and repeat the consonant К", 
-            'М': "Practice the sound М",
-            'Т': "Try the sound Т",
-            'О': "Repeat the vowel О",
-            'Е': "Practice the sound Е"
-        };
+        // Show specific step
+        function showStep(stepNumber) {
+            document.querySelectorAll('.lesson-step').forEach(step => step.classList.add('hidden'));
+            document.getElementById(`step${stepNumber}`).classList.remove('hidden');
+            
+            updateStepIndicators();
+            
+            document.getElementById('prevBtn').disabled = stepNumber === 1;
+            document.getElementById('nextBtn').disabled = stepNumber === totalSteps;
+        }
         
-        // Function to play instructions in English via ElevenLabs
-        async function playInstruction(text) {
+        function nextStep() {
+            if (currentStep < totalSteps) {
+                currentStep++;
+                showStep(currentStep);
+            }
+        }
+        
+        function previousStep() {
+            if (currentStep > 1) {
+                currentStep--;
+                showStep(currentStep);
+            }
+        }
+        
+        // Audio functions
+        async function playElevenLabsSound(text) {
             try {
                 const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${VOICE_ID}`, {
                     method: 'POST',
@@ -359,6 +499,42 @@
                         voice_settings: {
                             stability: 0.6,
                             similarity_boost: 0.8,
+                            style: 0.3,
+                            use_speaker_boost: true
+                        }
+                    })
+                });
+                
+                if (response.ok) {
+                    const audioBlob = await response.blob();
+                    const audioUrl = URL.createObjectURL(audioBlob);
+                    const audio = new Audio(audioUrl);
+                    audio.play();
+                } else {
+                    console.log('ElevenLabs unavailable');
+                    fallbackSpeech(text, 'ru-RU');
+                }
+            } catch (error) {
+                console.log('Error with ElevenLabs');
+                fallbackSpeech(text, 'ru-RU');
+            }
+        }
+        
+        async function playEnglishInstruction(text) {
+            try {
+                const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${VOICE_ID}`, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'audio/mpeg',
+                        'Content-Type': 'application/json',
+                        'xi-api-key': ELEVENLABS_API_KEY
+                    },
+                    body: JSON.stringify({
+                        text: text,
+                        model_id: 'eleven_multilingual_v2',
+                        voice_settings: {
+                            stability: 0.7,
+                            similarity_boost: 0.7,
                             style: 0.2,
                             use_speaker_boost: true
                         }
@@ -371,156 +547,44 @@
                     const audio = new Audio(audioUrl);
                     audio.play();
                 } else {
-                    console.log('ElevenLabs unavailable, using fallback');
-                    fallbackToWebSpeech(text);
+                    fallbackSpeech(text, 'en-US');
                 }
             } catch (error) {
-                console.log('Error with ElevenLabs');
-                fallbackToWebSpeech(text);
+                fallbackSpeech(text, 'en-US');
             }
         }
         
-        // Fallback speech synthesis
-        function fallbackToWebSpeech(text) {
+        function fallbackSpeech(text, lang) {
             const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = 'en-US';
+            utterance.lang = lang;
             utterance.rate = 0.8;
             window.speechSynthesis.speak(utterance);
         }
         
-        // Play pure Russian sound (you'll need to record these files)
-        function playRussianSound(sound) {
-            // For now, using phonetic approximation via TTS
-            // Replace with your recorded audio files later
-            const phonetic = {
-                'А': 'аah',
-                'К': 'k k k',
-                'М': 'mmm',
-                'Т': 't t t', 
-                'О': 'ooh',
-                'Е': 'ech'
-            };
-            
-            const utterance = new SpeechSynthesisUtterance(phonetic[sound]);
-            utterance.lang = 'ru-RU';
-            utterance.rate = 0.6;
-            utterance.pitch = 1.2;
-            
-            const voices = window.speechSynthesis.getVoices();
-            const russianVoice = voices.find(voice => voice.lang.startsWith('ru'));
-            if (russianVoice) {
-                utterance.voice = russianVoice;
-            }
-            
-            window.speechSynthesis.speak(utterance);
+        function playCustomSound(sound) {
+            // Placeholder for your custom recorded sounds
+            // Replace with actual audio files when ready
+            alert(`Playing your custom recorded sound: ${sound}\n\nReplace this with actual audio file: audio/${sound.toLowerCase()}.mp3`);
         }
         
-        function playSound(sound) {
-            // Visual feedback
-            const cards = document.querySelectorAll('.sound-card');
-            cards.forEach(card => card.classList.remove('active'));
-            
-            const targetCard = document.querySelector(`[data-sound="${sound}"]`);
-            if (targetCard) {
-                targetCard.classList.add('active');
-                setTimeout(() => targetCard.classList.remove('active'), 2000);
-            }
-            
-            // Update current sound
-            currentSoundIndex = sounds.indexOf(sound);
-            
-            // Play instruction in English, then Russian sound
-            playInstruction(instructions[sound]);
-            
-            setTimeout(() => {
-                playRussianSound(sound);
-            }, 2000);
+        function playIntroSound(sound) {
+            playCustomSound(sound);
         }
         
-        function playCurrentSound() {
-            if (currentSoundIndex >= 0 && currentSoundIndex < sounds.length) {
-                const sound = sounds[currentSoundIndex];
-                playRussianSound(sound);
-            }
+        function playIntroduction() {
+            const introText = "Learning to read and write Russian is actually quite easy! We're going to start right now. Let's begin with a group of letters that look and sound pretty similar to the Latin alphabet.";
+            playEnglishInstruction(introText);
         }
         
-        function nextSound() {
-            currentSoundIndex = (currentSoundIndex + 1) % sounds.length;
-            const sound = sounds[currentSoundIndex];
-            playSound(sound);
-        }
-        
-        function previousSound() {
-            currentSoundIndex = currentSoundIndex > 0 ? currentSoundIndex - 1 : sounds.length - 1;
-            const sound = sounds[currentSoundIndex];
-            playSound(sound);
-        }
-        
-        // Speech recognition setup
-        function initSpeechRecognition() {
-            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-                recognition = new SpeechRecognition();
-                recognition.continuous = false;
-                recognition.interimResults = false;
-                recognition.lang = 'ru-RU';
-                
-                recognition.onresult = function(event) {
-                    const transcript = event.results[0][0].transcript.toUpperCase();
-                    const targetSound = sounds[currentSoundIndex];
-                    
-                    document.getElementById('feedbackText').textContent = `You said: "${transcript}"`;
-                    document.getElementById('feedback').classList.remove('hidden', 'error');
-                    
-                    if (transcript.includes(targetSound)) {
-                        document.getElementById('feedback').classList.remove('error');
-                        playInstruction("Excellent! Well done!");
-                    } else {
-                        document.getElementById('feedback').classList.add('error');
-                        playInstruction("Try again. Listen carefully.");
-                    }
-                };
-                
-                recognition.onerror = function(event) {
-                    document.getElementById('feedbackText').textContent = 'Could not recognize speech. Try again.';
-                    document.getElementById('feedback').classList.remove('hidden');
-                    document.getElementById('feedback').classList.add('error');
-                };
-                
-                recognition.onend = function() {
-                    isRecording = false;
-                    document.getElementById('micBtn').classList.remove('recording');
-                };
-            }
-        }
-        
-        function startRecording() {
-            if (!recognition) {
-                initSpeechRecognition();
-            }
-            
-            if (!isRecording) {
-                recognition.start();
-                isRecording = true;
-                document.getElementById('micBtn').classList.add('recording');
-                document.getElementById('feedback').classList.add('hidden');
-            }
-        }
-        
-        // Initialize
+        // Initialize on load
         document.addEventListener('DOMContentLoaded', function() {
-            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-                document.getElementById('micBtn').innerHTML = '❌';
-                document.getElementById('micBtn').disabled = true;
-            }
+            initStepIndicators();
+            showStep(1);
             
-            // Start with first sound
+            // Auto-play introduction after 2 seconds
             setTimeout(() => {
-                playInstruction("Welcome to Russian phonetics! Let's start with the first sound.");
-                setTimeout(() => {
-                    playSound('А');
-                }, 3000);
-            }, 1000);
+                playIntroduction();
+            }, 2000);
         });
     </script>
 </body>
