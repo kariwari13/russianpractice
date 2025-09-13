@@ -557,7 +557,40 @@
         function fallbackSpeech(text, lang) {
             const utterance = new SpeechSynthesisUtterance(text);
             utterance.lang = lang;
-            utterance.rate = 0.8;
+            utterance.rate = 0.7;
+            utterance.pitch = 1.0;
+            utterance.volume = 1.0;
+            
+            // Попытка найти лучший голос
+            const voices = window.speechSynthesis.getVoices();
+            
+            if (lang === 'ru-RU') {
+                // Поиск качественного русского голоса
+                const bestRussianVoice = voices.find(voice => 
+                    voice.lang === 'ru-RU' && voice.name.includes('Premium')
+                ) || voices.find(voice => 
+                    voice.lang === 'ru-RU' && voice.name.includes('Google')
+                ) || voices.find(voice => 
+                    voice.lang.startsWith('ru')
+                );
+                
+                if (bestRussianVoice) {
+                    utterance.voice = bestRussianVoice;
+                    console.log('Using Russian voice:', bestRussianVoice.name);
+                }
+            } else {
+                // Английский голос
+                const bestEnglishVoice = voices.find(voice => 
+                    voice.lang === 'en-US' && voice.name.includes('Premium')
+                ) || voices.find(voice => 
+                    voice.lang === 'en-US'
+                );
+                
+                if (bestEnglishVoice) {
+                    utterance.voice = bestEnglishVoice;
+                }
+            }
+            
             window.speechSynthesis.speak(utterance);
         }
         
