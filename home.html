@@ -93,24 +93,27 @@
         cursor: pointer;
         font-size: 0.9em;
         transition: all 0.3s;
-        margin-right: 5px;
-    }
-    
-    .word-btn:hover {
-        background: #2980b9;
-        transform: translateY(-2px);
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
     }
     
     .mic-icon {
         background: #e74c3c;
-        color: white;
-        border: none;
-        padding: 5px 8px;
         border-radius: 50%;
-        cursor: pointer;
+        width: 25px;
+        height: 25px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
         font-size: 0.8em;
+        cursor: pointer;
         transition: all 0.3s;
-        margin-left: 5px;
+    }
+    
+    .mic-icon:hover {
+        background: #c0392b;
+        transform: scale(1.1);
     }
     
     .mic-icon.recording {
@@ -118,10 +121,9 @@
         animation: pulse 1s infinite;
     }
     
-    .word-with-mic {
-        display: inline-flex;
-        align-items: center;
-        margin: 5px;
+    .word-btn:hover {
+        background: #2980b9;
+        transform: translateY(-2px);
     }
     
     .audio-controls {
@@ -233,22 +235,14 @@
 
 ```
     <div id="step-m" class="lesson-card hidden">
+        <div class="instruction">Listen and repeat</div>
         <div class="word-practice">
             <div class="word-image">👩‍👧</div>
             <div class="word-content">
                 <div class="word-group">
-                    <div class="word-with-mic">
-                        <button class="word-btn" onclick="playWord('ма')">МА</button>
-                        <button class="mic-icon" onclick="recordWord('ма')">🎤</button>
-                    </div>
-                    <div class="word-with-mic">
-                        <button class="word-btn" onclick="playWord('мама')">МА́МА</button>
-                        <button class="mic-icon" onclick="recordWord('мама')">🎤</button>
-                    </div>
-                    <div class="word-with-mic">
-                        <button class="word-btn" onclick="playWord('ам')">АМ</button>
-                        <button class="mic-icon" onclick="recordWord('ам')">🎤</button>
-                    </div>
+                    <span class="word-btn" onclick="playWord('ма')">МА <span class="mic-icon" onclick="recordWord('ма', event)">🎤</span></span>
+                    <span class="word-btn" onclick="playWord('мама')">МА́МА <span class="mic-icon" onclick="recordWord('мама', event)">🎤</span></span>
+                    <span class="word-btn" onclick="playWord('ам')">АМ <span class="mic-icon" onclick="recordWord('ам', event)">🎤</span></span>
                 </div>
                 <div id="feedback-m" class="feedback hidden"></div>
             </div>
@@ -259,34 +253,17 @@
     </div>
 
     <div id="step-k" class="lesson-card hidden">
+        <div class="instruction">Listen and repeat</div>
         <div class="word-practice">
             <div class="word-image">🐒</div>
             <div class="word-content">
                 <div class="word-group">
-                    <div class="word-with-mic">
-                        <button class="word-btn" onclick="playWord('ка')">КА</button>
-                        <button class="mic-icon" onclick="recordWord('ка')">🎤</button>
-                    </div>
-                    <div class="word-with-mic">
-                        <button class="word-btn" onclick="playWord('ак')">АК</button>
-                        <button class="mic-icon" onclick="recordWord('ак')">🎤</button>
-                    </div>
-                    <div class="word-with-mic">
-                        <button class="word-btn" onclick="playWord('мак')">МАК</button>
-                        <button class="mic-icon" onclick="recordWord('мак')">🎤</button>
-                    </div>
-                    <div class="word-with-mic">
-                        <button class="word-btn" onclick="playWord('кам')">КАМ</button>
-                        <button class="mic-icon" onclick="recordWord('кам')">🎤</button>
-                    </div>
-                    <div class="word-with-mic">
-                        <button class="word-btn" onclick="playWord('кака')">КА́КА</button>
-                        <button class="mic-icon" onclick="recordWord('кака')">🎤</button>
-                    </div>
-                    <div class="word-with-mic">
-                        <button class="word-btn" onclick="playWord('макака')">МАКА́КА</button>
-                        <button class="mic-icon" onclick="recordWord('макака')">🎤</button>
-                    </div>
+                    <span class="word-btn" onclick="playWord('ка')">КА <span class="mic-icon" onclick="recordWord('ка', event)">🎤</span></span>
+                    <span class="word-btn" onclick="playWord('ак')">АК <span class="mic-icon" onclick="recordWord('ак', event)">🎤</span></span>
+                    <span class="word-btn" onclick="playWord('мак')">МАК <span class="mic-icon" onclick="recordWord('мак', event)">🎤</span></span>
+                    <span class="word-btn" onclick="playWord('кам')">КАМ <span class="mic-icon" onclick="recordWord('кам', event)">🎤</span></span>
+                    <span class="word-btn" onclick="playWord('кака')">КА́КА <span class="mic-icon" onclick="recordWord('кака', event)">🎤</span></span>
+                    <span class="word-btn" onclick="playWord('макака')">МАКА́КА <span class="mic-icon" onclick="recordWord('макака', event)">🎤</span></span>
                 </div>
                 <div id="feedback-k" class="feedback hidden"></div>
             </div>
@@ -297,34 +274,17 @@
     </div>
 
     <div id="step-o" class="lesson-card hidden">
+        <div class="instruction">Listen and repeat</div>
         <div class="word-practice">
             <div class="word-image">😴</div>
             <div class="word-content">
                 <div class="word-group">
-                    <div class="word-with-mic">
-                        <button class="word-btn" onclick="playWord('мо')">МО</button>
-                        <button class="mic-icon" onclick="recordWord('мо')">🎤</button>
-                    </div>
-                    <div class="word-with-mic">
-                        <button class="word-btn" onclick="playWord('ко')">КО</button>
-                        <button class="mic-icon" onclick="recordWord('ко')">🎤</button>
-                    </div>
-                    <div class="word-with-mic">
-                        <button class="word-btn" onclick="playWord('ом')">ОМ</button>
-                        <button class="mic-icon" onclick="recordWord('ом')">🎤</button>
-                    </div>
-                    <div class="word-with-mic">
-                        <button class="word-btn" onclick="playWord('ок')">ОК</button>
-                        <button class="mic-icon" onclick="recordWord('ок')">🎤</button>
-                    </div>
-                    <div class="word-with-mic">
-                        <button class="word-btn" onclick="playWord('мок')">МОК</button>
-                        <button class="mic-icon" onclick="recordWord('мок')">🎤</button>
-                    </div>
-                    <div class="word-with-mic">
-                        <button class="word-btn" onclick="playWord('кома')">КО́МА</button>
-                        <button class="mic-icon" onclick="recordWord('кома')">🎤</button>
-                    </div>
+                    <span class="word-btn" onclick="playWord('мо')">МО <span class="mic-icon" onclick="recordWord('мо', event)">🎤</span></span>
+                    <span class="word-btn" onclick="playWord('ко')">КО <span class="mic-icon" onclick="recordWord('ко', event)">🎤</span></span>
+                    <span class="word-btn" onclick="playWord('ом')">ОМ <span class="mic-icon" onclick="recordWord('ом', event)">🎤</span></span>
+                    <span class="word-btn" onclick="playWord('ок')">ОК <span class="mic-icon" onclick="recordWord('ок', event)">🎤</span></span>
+                    <span class="word-btn" onclick="playWord('мок')">МОК <span class="mic-icon" onclick="recordWord('мок', event)">🎤</span></span>
+                    <span class="word-btn" onclick="playWord('кома')">КО́МА <span class="mic-icon" onclick="recordWord('кома', event)">🎤</span></span>
                 </div>
                 <div id="feedback-o" class="feedback hidden"></div>
             </div>
@@ -332,62 +292,25 @@
     </div>
 
     <div id="step-t" class="lesson-card hidden">
+        <div class="instruction">Listen and repeat</div>
         <div class="word-practice">
             <div class="word-image">🐱</div>
             <div class="word-content">
                 <div class="word-group">
-                    <div class="word-with-mic">
-                        <button class="word-btn" onclick="playWord('то')">ТО</button>
-                        <button class="mic-icon" onclick="recordWord('то')">🎤</button>
-                    </div>
-                    <div class="word-with-mic">
-                        <button class="word-btn" onclick="playWord('та')">ТА</button>
-                        <button class="mic-icon" onclick="recordWord('та')">🎤</button>
-                    </div>
-                    <div class="word-with-mic">
-                        <button class="word-btn" onclick="playWord('от')">ОТ</button>
-                        <button class="mic-icon" onclick="recordWord('от')">🎤</button>
-                    </div>
-                    <div class="word-with-mic">
-                        <button class="word-btn" onclick="playWord('ат')">АТ</button>
-                        <button class="mic-icon" onclick="recordWord('ат')">🎤</button>
-                    </div>
-                    <div class="word-with-mic">
-                        <button class="word-btn" onclick="playWord('том')">ТОМ</button>
-                        <button class="mic-icon" onclick="recordWord('том')">🎤</button>
-                    </div>
-                    <div class="word-with-mic">
-                        <button class="word-btn" onclick="playWord('кот')">КОТ</button>
-                        <button class="mic-icon" onclick="recordWord('кот')">🎤</button>
-                    </div>
-                    <div class="word-with-mic">
-                        <button class="word-btn" onclick="playWord('мот')">МОТ</button>
-                        <button class="mic-icon" onclick="recordWord('мот')">🎤</button>
-                    </div>
-                    <div class="word-with-mic">
-                        <button class="word-btn" onclick="playWord('так')">ТАК</button>
-                        <button class="mic-icon" onclick="recordWord('так')">🎤</button>
-                    </div>
-                    <div class="word-with-mic">
-                        <button class="word-btn" onclick="playWord('кат')">КАТ</button>
-                        <button class="mic-icon" onclick="recordWord('кат')">🎤</button>
-                    </div>
-                    <div class="word-with-mic">
-                        <button class="word-btn" onclick="playWord('атом')">А́ТОМ</button>
-                        <button class="mic-icon" onclick="recordWord('атом')">🎤</button>
-                    </div>
-                    <div class="word-with-mic">
-                        <button class="word-btn" onclick="playWord('такт')">ТАКТ</button>
-                        <button class="mic-icon" onclick="recordWord('такт')">🎤</button>
-                    </div>
-                    <div class="word-with-mic">
-                        <button class="word-btn" onclick="playWord('томат')">ТОМА́Т</button>
-                        <button class="mic-icon" onclick="recordWord('томат')">🎤</button>
-                    </div>
-                    <div class="word-with-mic">
-                        <button class="word-btn" onclick="playWord('атака')">АТА́КА</button>
-                        <button class="mic-icon" onclick="recordWord('атака')">🎤</button>
-                    </div>
+                    <span class="word-btn" onclick="playWord('то')">ТО <span class="mic-icon" onclick="recordWord('то', event)">🎤</span></span>
+                    <span class="word-btn" onclick="playWord('та')">ТА <span class="mic-icon" onclick="recordWord('та', event)">🎤</span></span>
+                    <span class="word-btn" onclick="playRhythm('та-ТА́-та')">та-ТА́-та <span class="mic-icon" onclick="recordWord('тата', event)">🎤</span></span>
+                    <span class="word-btn" onclick="playWord('от')">ОТ <span class="mic-icon" onclick="recordWord('от', event)">🎤</span></span>
+                    <span class="word-btn" onclick="playWord('ат')">АТ <span class="mic-icon" onclick="recordWord('ат', event)">🎤</span></span>
+                    <span class="word-btn" onclick="playWord('том')">ТОМ <span class="mic-icon" onclick="recordWord('том', event)">🎤</span></span>
+                    <span class="word-btn" onclick="playWord('кот')">КОТ <span class="mic-icon" onclick="recordWord('кот', event)">🎤</span></span>
+                    <span class="word-btn" onclick="playWord('мот')">МОТ <span class="mic-icon" onclick="recordWord('мот', event)">🎤</span></span>
+                    <span class="word-btn" onclick="playWord('так')">ТАК <span class="mic-icon" onclick="recordWord('так', event)">🎤</span></span>
+                    <span class="word-btn" onclick="playWord('кат')">КАТ <span class="mic-icon" onclick="recordWord('кат', event)">🎤</span></span>
+                    <span class="word-btn" onclick="playWord('атом')">А́ТОМ <span class="mic-icon" onclick="recordWord('атом', event)">🎤</span></span>
+                    <span class="word-btn" onclick="playWord('такт')">ТАКТ <span class="mic-icon" onclick="recordWord('такт', event)">🎤</span></span>
+                    <span class="word-btn" onclick="playWord('томат')">ТОМА́Т <span class="mic-icon" onclick="recordWord('томат', event)">🎤</span></span>
+                    <span class="word-btn" onclick="playWord('атака')">АТА́КА <span class="mic-icon" onclick="recordWord('атака', event)">🎤</span></span>
                 </div>
                 <div id="feedback-t" class="feedback hidden"></div>
             </div>
@@ -395,58 +318,27 @@
     </div>
 
     <div id="step-e" class="lesson-card hidden">
+        <div class="instruction">Listen and repeat</div>
         <div class="word-practice">
             <div class="word-image">☄️</div>
             <div class="word-content">
                 <div class="word-group">
-                    <div class="word-with-mic">
-                        <button class="word-btn" onclick="playWord('ме')">МЕ</button>
-                        <button class="mic-icon" onclick="recordWord('ме')">🎤</button>
-                    </div>
-                    <div class="word-with-mic">
-                        <button class="word-btn" onclick="playWord('те')">ТЕ</button>
-                        <button class="mic-icon" onclick="recordWord('те')">🎤</button>
-                    </div>
-                    <div class="word-with-mic">
-                        <button class="word-btn" onclick="playWord('ке')">КЕ</button>
-                        <button class="mic-icon" onclick="recordWord('ке')">🎤</button>
-                    </div>
-                    <div class="word-with-mic">
-                        <button class="word-btn" onclick="playWord('ем')">ЕМ</button>
-                        <button class="mic-icon" onclick="recordWord('ем')">🎤</button>
-                    </div>
-                    <div class="word-with-mic">
-                        <button class="word-btn" onclick="playWord('ек')">ЕК</button>
-                        <button class="mic-icon" onclick="recordWord('ек')">🎤</button>
-                    </div>
-                    <div class="word-with-mic">
-                        <button class="word-btn" onclick="playWord('мета')">МЕ́ТА</button>
-                        <button class="mic-icon" onclick="recordWord('мета')">🎤</button>
-                    </div>
-                    <div class="word-with-mic">
-                        <button class="word-btn" onclick="playWord('тема')">ТЕ́МА</button>
-                        <button class="mic-icon" onclick="recordWord('тема')">🎤</button>
-                    </div>
-                    <div class="word-with-mic">
-                        <button class="word-btn" onclick="playWord('комета')">КОМЕ́ТА</button>
-                        <button class="mic-icon" onclick="recordWord('комета')">🎤</button>
-                    </div>
-                    <div class="word-with-mic">
-                        <button class="word-btn" onclick="playRhythm('та-ТА́-та')">та-ТА́-та</button>
-                        <button class="mic-icon" onclick="recordWord('та-ТА́-та')">🎤</button>
-                    </div>
-                    <div class="word-with-mic">
-                        <button class="word-btn" onclick="playWord('метео')">МЕТЕ́О</button>
-                        <button class="mic-icon" onclick="recordWord('метео')">🎤</button>
-                    </div>
+                    <span class="word-btn" onclick="playWord('ме')">МЕ <span class="mic-icon" onclick="recordWord('ме', event)">🎤</span></span>
+                    <span class="word-btn" onclick="playWord('те')">ТЕ <span class="mic-icon" onclick="recordWord('те', event)">🎤</span></span>
+                    <span class="word-btn" onclick="playWord('ке')">КЕ <span class="mic-icon" onclick="recordWord('ке', event)">🎤</span></span>
+                    <span class="word-btn" onclick="playWord('ем')">ЕМ <span class="mic-icon" onclick="recordWord('ем', event)">🎤</span></span>
+                    <span class="word-btn" onclick="playWord('ек')">ЕК <span class="mic-icon" onclick="recordWord('ек', event)">🎤</span></span>
+                    <span class="word-btn" onclick="playWord('мета')">МЕ́ТА <span class="mic-icon" onclick="recordWord('мета', event)">🎤</span></span>
+                    <span class="word-btn" onclick="playWord('тема')">ТЕ́МА <span class="mic-icon" onclick="recordWord('тема', event)">🎤</span></span>
+                    <span class="word-btn" onclick="playWord('комета')">КОМЕ́ТА <span class="mic-icon" onclick="recordWord('комета', event)">🎤</span></span>
+                    <span class="word-btn" onclick="playWord('метео')">МЕТЕ́О <span class="mic-icon" onclick="recordWord('метео', event)">🎤</span></span>
                 </div>
                 <div id="feedback-e" class="feedback hidden"></div>
             </div>
         </div>
         <div class="explanation-box">
-            We use ТА-та to show rhythm patterns. Each ТА or та represents one syllable. 
-            ТА́ means this syllable is stressed - you say it louder and longer. 
-            та means unstressed - you say it quieter and shorter. Try the rhythm first, then the word!
+            Now you understand Russian rhythm! Each syllable can be stressed (loud and clear) or unstressed (quiet and short). 
+            This rhythm pattern helps you speak Russian naturally!
         </div>
     </div>
 
@@ -524,20 +416,47 @@
         alert(`Play your recorded audio: ${word}.mp3`);
     }
     
-    function startPractice(wordType) {
+    function recordWord(word, event) {
+        event.stopPropagation(); // Prevent word play when clicking microphone
+        
         if (!recognition) {
             initSpeechRecognition();
         }
         
-        currentWord = wordType;
+        currentWord = word;
         waitingForRepeat = false;
-        const micBtn = document.getElementById(`mic-${wordType}`);
-        if (micBtn) {
-            micBtn.classList.add('recording');
-        }
+        
+        // Add recording animation to this specific microphone
+        const micIcon = event.target;
+        micIcon.classList.add('recording');
         
         if (recognition) {
-            recognition.start();
+            try {
+                recognition.start();
+            } catch (e) {
+                console.error('Recognition start error:', e);
+                micIcon.classList.remove('recording');
+            }
+        }
+    }
+    
+    function playRhythm(pattern) {
+        stopAllAudio();
+        let rhythmText = pattern.replace(/ТА́/g, 'TAH').replace(/та/g, 'tah');
+        
+        if (window.speechSynthesis) {
+            const utterance = new SpeechSynthesisUtterance(rhythmText);
+            utterance.lang = 'ru-RU';
+            utterance.rate = 0.7;
+            utterance.pitch = 1.2;
+            
+            const voices = window.speechSynthesis.getVoices();
+            const russianVoice = voices.find(voice => voice.lang.startsWith('ru'));
+            if (russianVoice) {
+                utterance.voice = russianVoice;
+            }
+            
+            window.speechSynthesis.speak(utterance);
         }
     }
     
