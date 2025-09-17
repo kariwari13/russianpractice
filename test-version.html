@@ -381,8 +381,6 @@
         </div>
     </div>
 
-    <script type="text/javascript" src="//download.yandex.ru/webspeechkit/webspeechkit-1.0.0.js"></script>
-    <script type="text/javascript" src="//download.yandex.ru/webspeechkit/webspeechkit-settings.js"></script>
     <script>
         // Global variables
         let currentModule = 1;
@@ -460,14 +458,17 @@
             stopCurrentAudio();
         }
 
-        // TTS с поддержкой пользовательских аудиофайлов
+        // TTS только с Web Speech API (временно, пока не загружены аудиофайлы)
         async function playTextToSpeech(text, isRussian = true) {
             try {
                 stopCurrentAudio();
                 showStopButton();
-
+                
+                // Временно используем только Web Speech API
+                await playWebSpeechTTS(text, isRussian);
+                
+                /* После загрузки аудиофайлов раскомментируйте:
                 if (isRussian) {
-                    // Сначала пробуем загрузить пользовательское аудио
                     const customAudioUrl = `${imageBaseUrl}audio/${text.toLowerCase()}.mp3`;
                     const hasCustomAudio = await checkAudioExists(customAudioUrl);
                     
@@ -480,9 +481,9 @@
                 } else {
                     await playWebSpeechTTS(text, isRussian);
                 }
+                */
             } catch (error) {
                 console.error('TTS error:', error);
-                console.log('Falling back to Web Speech API');
                 await playWebSpeechTTS(text, isRussian);
             }
         }
@@ -785,6 +786,47 @@
             }
             
             updateProgress();
+        }
+
+        function showCongratulations() {
+            const content = document.querySelector('.learning-area');
+            const congratulations = document.createElement('div');
+            congratulations.className = 'congratulations';
+            congratulations.innerHTML = `
+                <h3>Congratulations!</h3>
+                <p>You completed Module ${currentModule}! Great job learning Russian pronunciation!</p>
+                <p>Moving to next module...</p>
+            `;
+            
+            if (currentModule === 1) {
+                congratulations.innerHTML += '<p>You just learned your first Russian word МАМА (mama)!</p>';
+            } else if (currentModule === 2) {
+                congratulations.innerHTML += '<p>From mama to monkey (МАКАКА)!</p>';
+            }
+            
+            content.appendChild(congratulations);
+            
+            setTimeout(() => {
+                congratulations.remove();
+            }, 3000);
+        }
+
+        function showFinalCongratulations() {
+            const content = document.querySelector('.learning-area');
+            const congratulations = document.createElement('div');
+            congratulations.className = 'congratulations';
+            congratulations.innerHTML = `
+                <h3>Amazing! You completed ALL modules!</h3>
+                <p>Congratulations! You've learned all the basic Russian letters and words!</p>
+                <p>You can now recognize and pronounce: М, А, К, О, Т, Е</p>
+                <p>Keep practicing these words to master Russian pronunciation!</p>
+            `;
+            
+            content.appendChild(congratulations);
+            
+            setTimeout(() => {
+                congratulations.remove();
+            }, 8000);
         }
 
         // UI updates
