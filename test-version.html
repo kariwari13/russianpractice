@@ -460,18 +460,21 @@
             stopCurrentAudio();
         }
 
-        // TTS с поддержкой Yandex WebSpeechKit и fallback на Web Speech API
+        // TTS с поддержкой пользовательских аудиофайлов
         async function playTextToSpeech(text, isRussian = true) {
             try {
                 stopCurrentAudio();
                 showStopButton();
 
                 if (isRussian) {
-                    // Пробуем Yandex WebSpeechKit сначала
-                    if (typeof ya !== 'undefined' && ya.speechkit) {
-                        await playYandexWebTTS(text);
+                    // Сначала пробуем загрузить пользовательское аудио
+                    const customAudioUrl = `${imageBaseUrl}audio/${text.toLowerCase()}.mp3`;
+                    const hasCustomAudio = await checkAudioExists(customAudioUrl);
+                    
+                    if (hasCustomAudio) {
+                        await playCustomAudio(customAudioUrl, text);
                     } else {
-                        console.log('Yandex WebSpeechKit not available, using Web Speech API');
+                        console.log(`No custom audio for ${text}, using Web Speech API`);
                         await playWebSpeechTTS(text, isRussian);
                     }
                 } else {
@@ -484,47 +487,39 @@
             }
         }
 
-        async function playYandexWebTTS(text) {
+        async function checkAudioExists(url) {
             try {
-                console.log('Using Yandex WebSpeechKit TTS');
-                
-                const tts = ya.speechkit.Tts({
-                    speaker: 'jane',    // женский голос
-                    emotion: 'neutral', 
-                    gender: 'female'
-                });
-
-                // Создаем Promise для отслеживания завершения
-                const playPromise = new Promise((resolve, reject) => {
-                    tts.speak(text, {
-                        onDone: () => {
-                            console.log('Yandex TTS completed');
-                            hideStopButton();
-                            resolve();
-                        },
-                        onError: (err) => {
-                            console.error('Yandex TTS error:', err);
-                            hideStopButton();
-                            reject(err);
-                        }
-                    });
-                });
-
-                // Создаем псевдо audio объект для управления
-                currentAudio = {
-                    pause: () => {
-                        tts.stop();
-                        hideStopButton();
-                    },
-                    paused: false
-                };
-
-                await playPromise;
-                
+                const response = await fetch(url, { method: 'HEAD' });
+                return response.ok;
             } catch (error) {
-                console.error('Yandex WebSpeechKit error:', error);
-                throw error;
+                return false;
             }
+        }
+
+        async function playCustomAudio(audioUrl, text) {
+            return new Promise((resolve, reject) => {
+                console.log(`Playing custom audio for: ${text}`);
+                
+                currentAudio = new Audio(audioUrl);
+                
+                currentAudio.onloadeddata = () => {
+                    console.log(`Custom audio loaded: ${text}`);
+                };
+                
+                currentAudio.onended = () => {
+                    console.log(`Custom audio ended: ${text}`);
+                    hideStopButton();
+                    resolve();
+                };
+                
+                currentAudio.onerror = (e) => {
+                    console.error(`Custom audio error for ${text}:`, e);
+                    hideStopButton();
+                    reject(new Error(`Custom audio failed: ${text}`));
+                };
+                
+                currentAudio.play().catch(reject);
+            });
         }
 
         async function playWebSpeechTTS(text, isRussian = true) {
@@ -742,11 +737,45 @@
         function nextWord() {
             currentWordIndex++;
             
+            // Если слова в текущем модуле закончились
             if (currentWordIndex >= modules[currentModule].words.length) {
+                // Показываем поздравления для текущего модуля
                 showCongratulations();
-                moduleStarted = false;
-                updateButtons();
+                
+                // Проверяем есть ли следующий модуль
+                if (currentModule < Object.keys(modules).length) {
+                    // Переходим к следующему модулю
+                    setTimeout(() => {
+                        currentModule++;
+                        currentWordIndex = 0;
+                        moduleStarted = true;
+                        
+                        // Обновляем UI для нового модуля
+                        document.querySelectorAll('.module-btn').forEach(btn => btn.classList.remove('active'));
+                        document.querySelectorAll('.module-btn')[currentModule - 1].classList.add('active');
+                        
+                        updateLettersDisplay();
+                        updateInstructionArea();
+                        displayCurrentWord();
+                        updateButtons();
+                        updateProgress();
+                        
+                        // Автоматически проигрываем первое слово нового модуля
+                        setTimeout(() => {
+                            playCurrentWord();
+                        }, 1000);
+                        
+                    }, 3000); // Даем время показать поздравления
+                } else {
+                    // Все модули завершены
+                    setTimeout(() => {
+                        showFinalCongratulations();
+                        moduleStarted = false;
+                        updateButtons();
+                    }, 3000);
+                }
             } else {
+                // Обычный переход к следующему слову в модуле
                 displayCurrentWord();
                 updateButtons();
                 
@@ -823,26 +852,22 @@
             document.getElementById('feedback').classList.add('hidden');
         }
 
-        function showCongratulations() {
+        function showFinalCongratulations() {
             const content = document.querySelector('.learning-area');
             const congratulations = document.createElement('div');
             congratulations.className = 'congratulations';
             congratulations.innerHTML = `
-                <h3>Congratulations! 🎉</h3>
-                <p>You completed Module ${currentModule}! Great job learning Russian pronunciation!</p>
+                <h3>Amazing! You completed ALL modules!</h3>
+                <p>Congratulations! You've learned all the basic Russian letters and words!</p>
+                <p>You can now recognize and pronounce: М, А, К, О, Т, Е</p>
+                <p>Keep practicing these words to master Russian pronunciation!</p>
             `;
-            
-            if (currentModule === 1) {
-                congratulations.innerHTML += '<p>You just learned your first Russian word МАМА (mama)! 👶</p>';
-            } else if (currentModule === 2) {
-                congratulations.innerHTML += '<p>From mama to monkey (МАКАКА)! 🐵</p>';
-            }
             
             content.appendChild(congratulations);
             
             setTimeout(() => {
                 congratulations.remove();
-            }, 5000);
+            }, 8000);
         }
 
         // Initialize
