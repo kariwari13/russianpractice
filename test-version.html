@@ -458,18 +458,156 @@
             stopCurrentAudio();
         }
 
-        // Simple and reliable TTS solution
+        // Yandex SpeechKit configuration - ВАШИ ДАННЫЕ
+        const YANDEX_API_KEY = 'AQVN1FSCgk8QkbRXUq6xNT9Bz8xJBo1z29oiSMhs';
+        const YANDEX_FOLDER_ID = 'b1gdsbq0b26gplmq89qk';
+
+        // Enhanced TTS with Yandex SpeechKit (CORS-friendly approach)
         async function playTextToSpeech(text, isRussian = true) {
             try {
                 stopCurrentAudio();
                 showStopButton();
 
-                // Use only Web Speech API - most reliable solution
-                await playWebSpeechTTS(text, isRussian);
+                // Try Yandex first if configured
+                if (isRussian && YANDEX_API_KEY !== 'ВАШЕ_API_КЛЮЧ_СЮДА' && YANDEX_FOLDER_ID !== 'ВАШ_FOLDER_ID_СЮДА') {
+                    console.log('Trying Yandex TTS...');
+                    await playYandexTTS(text);
+                } else {
+                    console.log('Using Web Speech API (Yandex not configured)');
+                    await playWebSpeechTTS(text, isRussian);
+                }
             } catch (error) {
-                console.error('Text-to-speech error:', error);
-                hideStopButton();
-                alert(`Ошибка воспроизведения: ${text}`);
+                console.error('TTS error:', error);
+                console.log('Falling back to Web Speech API');
+                await playWebSpeechTTS(text, isRussian);
+            }
+        }
+
+        async function playYandexTTS(text) {
+            try {
+                // Method 1: Direct API call with proper headers
+                const requestBody = new URLSearchParams({
+                    'text': text,
+                    'lang': 'ru-RU',
+                    'voice': 'alena',
+                    'emotion': 'neutral',
+                    'speed': '0.9',
+                    'format': 'mp3',
+                    'folderId': YANDEX_FOLDER_ID
+                });
+
+                console.log('Making Yandex TTS request:', {
+                    text: text,
+                    folderId: YANDEX_FOLDER_ID.substring(0, 10) + '...',
+                    apiKey: YANDEX_API_KEY.substring(0, 10) + '...'
+                });
+
+                const response = await fetch('https://tts.api.cloud.yandex.net/speech/v1/tts:synthesize', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Api-Key ${YANDEX_API_KEY}`,
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: requestBody
+                });
+
+                console.log('Yandex response status:', response.status);
+                console.log('Yandex response headers:', [...response.headers.entries()]);
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('Yandex TTS error response:', errorText);
+                    throw new Error(`Yandex TTS failed: ${response.status} - ${errorText}`);
+                }
+
+                const audioBlob = await response.blob();
+                console.log('Yandex audio blob size:', audioBlob.size, 'bytes');
+                
+                if (audioBlob.size === 0) {
+                    throw new Error('Yandex returned empty audio');
+                }
+
+                const audioUrl = URL.createObjectURL(audioBlob);
+                currentAudio = new Audio(audioUrl);
+
+                currentAudio.onloadstart = () => console.log('Audio loading started');
+                currentAudio.oncanplay = () => console.log('Audio can play');
+                currentAudio.onplaying = () => console.log('Audio is playing');
+
+                currentAudio.onended = () => {
+                    console.log('Yandex audio ended');
+                    hideStopButton();
+                    URL.revokeObjectURL(audioUrl);
+                };
+
+                currentAudio.onerror = (e) => {
+                    console.error('Yandex audio playback error:', e);
+                    hideStopButton();
+                    URL.revokeObjectURL(audioUrl);
+                };
+
+                await currentAudio.play();
+                console.log('Yandex TTS audio playing successfully');
+
+            } catch (error) {
+                console.error('Yandex TTS detailed error:', error);
+                
+                // Try alternative method using GET parameters (sometimes works better)
+                try {
+                    console.log('Trying Yandex alternative method...');
+                    await playYandexTTSAlternative(text);
+                } catch (altError) {
+                    console.error('Yandex alternative method failed:', altError);
+                    throw error; // Throw original error
+                }
+            }
+        }
+
+        async function playYandexTTSAlternative(text) {
+            // Alternative approach: sometimes GET works better than POST
+            const params = new URLSearchParams({
+                'text': text,
+                'lang': 'ru-RU',
+                'voice': 'alena',
+                'speed': '0.9',
+                'format': 'mp3',
+                'folderId': YANDEX_FOLDER_ID,
+                'key': YANDEX_API_KEY
+            });
+
+            const url = `https://tts.api.cloud.yandex.net/speech/v1/tts:synthesize?${params}`;
+            
+            try {
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Api-Key ${YANDEX_API_KEY}`,
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Alternative method failed: ${response.status}`);
+                }
+
+                const audioBlob = await response.blob();
+                const audioUrl = URL.createObjectURL(audioBlob);
+                currentAudio = new Audio(audioUrl);
+
+                currentAudio.onended = () => {
+                    hideStopButton();
+                    URL.revokeObjectURL(audioUrl);
+                };
+
+                currentAudio.onerror = () => {
+                    hideStopButton();
+                    URL.revokeObjectURL(audioUrl);
+                };
+
+                await currentAudio.play();
+                console.log('Yandex alternative method successful');
+            } catch (error) {
+                console.error('Alternative method error:', error);
+                throw error;
             }
         }
 
@@ -479,10 +617,8 @@
                     throw new Error('Speech synthesis not supported');
                 }
 
-                // Cancel any ongoing speech
                 speechSynthesis.cancel();
 
-                // Wait for voices to load
                 await new Promise((resolve) => {
                     const voices = speechSynthesis.getVoices();
                     if (voices.length > 0) {
@@ -495,7 +631,6 @@
                             }
                         };
                         speechSynthesis.addEventListener('voiceschanged', loadVoices);
-                        // Fallback timeout
                         setTimeout(resolve, 1000);
                     }
                 });
@@ -508,69 +643,33 @@
                     utterance.pitch = 1.0;
                     utterance.volume = 1.0;
                     
-                    // Find the best available Russian voice
                     const voices = speechSynthesis.getVoices();
-                    console.log('All available voices:', voices.map(v => `${v.name} (${v.lang}) ${v.localService ? 'Local' : 'Remote'}`));
-                    
-                    // Look for Russian voices in order of preference
                     const russianVoices = voices.filter(voice => 
                         voice.lang === 'ru-RU' ||
                         voice.lang.startsWith('ru-') ||
-                        voice.lang === 'ru' ||
-                        voice.name.toLowerCase().includes('russian') ||
-                        voice.name.toLowerCase().includes('русский')
+                        voice.name.toLowerCase().includes('russian')
                     );
                     
-                    console.log('Russian voices found:', russianVoices.map(v => `${v.name} (${v.lang})`));
-                    
-                    // Prefer Google voices, then any Russian voice
-                    let selectedVoice = russianVoices.find(v => 
-                        v.name.toLowerCase().includes('google') ||
-                        v.name.toLowerCase().includes('yandex')
-                    );
-                    
-                    if (!selectedVoice) {
-                        selectedVoice = russianVoices.find(v => !v.localService); // Prefer remote voices
-                    }
-                    
-                    if (!selectedVoice) {
-                        selectedVoice = russianVoices[0]; // Any Russian voice
-                    }
+                    const selectedVoice = russianVoices.find(v => 
+                        v.name.toLowerCase().includes('google')
+                    ) || russianVoices[0];
                     
                     if (selectedVoice) {
                         utterance.voice = selectedVoice;
-                        console.log('Selected voice:', selectedVoice.name, selectedVoice.lang);
-                    } else {
-                        console.log('No Russian voice found, using default with ru-RU lang');
+                        console.log('Using voice:', selectedVoice.name);
                     }
-                } else {
-                    utterance.lang = 'en-US';
-                    utterance.rate = 0.9;
                 }
 
-                // Set up event handlers
-                utterance.onstart = () => {
-                    console.log('Speech started for:', text);
-                };
-
+                utterance.onstart = () => console.log('Web Speech started');
                 utterance.onend = () => {
-                    console.log('Speech ended');
+                    console.log('Web Speech ended');
                     hideStopButton();
                 };
-
                 utterance.onerror = (event) => {
-                    console.error('Speech error:', event.error, event.type);
+                    console.error('Web Speech error:', event.error);
                     hideStopButton();
-                    
-                    // Don't show error for common issues
-                    if (event.error !== 'interrupted' && event.error !== 'canceled') {
-                        setTimeout(() => {
-                            alert(`Ошибка воспроизведения: ${event.error}`);
-                        }, 100);
-                    }
                 };
 
-                // Create current audio reference for stop functionality
                 currentAudio = {
                     pause: () => {
                         speechSynthesis.cancel();
@@ -579,12 +678,11 @@
                     paused: false
                 };
 
-                // Speak the text
                 speechSynthesis.speak(utterance);
-                console.log('Started speaking:', text);
+                console.log('Web Speech started for:', text);
 
             } catch (error) {
-                console.error('Web Speech TTS error:', error);
+                console.error('Web Speech error:', error);
                 hideStopButton();
                 throw error;
             }
