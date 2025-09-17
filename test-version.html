@@ -381,7 +381,6 @@
         </div>
     </div>
 
-    <script src="https://code.responsivevoice.org/responsivevoice.js?key=FREE"></script>
     <script>
         // Global variables
         let currentModule = 1;
@@ -459,142 +458,135 @@
             stopCurrentAudio();
         }
 
-        // ResponsiveVoice + Web Speech API
+        // Simple and reliable TTS solution
         async function playTextToSpeech(text, isRussian = true) {
             try {
                 stopCurrentAudio();
                 showStopButton();
 
-                // Try ResponsiveVoice first (free, good quality)
-                if (isRussian && typeof responsiveVoice !== 'undefined') {
-                    playResponsiveVoice(text);
-                } else {
-                    // Fallback to Web Speech API
-                    await playWebSpeechTTS(text, isRussian);
-                }
+                // Use only Web Speech API - most reliable solution
+                await playWebSpeechTTS(text, isRussian);
             } catch (error) {
                 console.error('Text-to-speech error:', error);
                 hideStopButton();
-                // Fallback to Web Speech API
-                await playWebSpeechTTS(text, isRussian);
-            }
-        }
-
-        function playResponsiveVoice(text) {
-            try {
-                responsiveVoice.speak(text, "Russian Female", {
-                    rate: 0.8,
-                    pitch: 1,
-                    volume: 1,
-                    onstart: () => {
-                        console.log('ResponsiveVoice started');
-                        // Create pseudo audio object
-                        currentAudio = {
-                            pause: () => {
-                                responsiveVoice.cancel();
-                                hideStopButton();
-                            },
-                            paused: false
-                        };
-                    },
-                    onend: () => {
-                        console.log('ResponsiveVoice ended');
-                        hideStopButton();
-                    },
-                    onerror: (error) => {
-                        console.error('ResponsiveVoice error:', error);
-                        hideStopButton();
-                        // Fallback to Web Speech
-                        playWebSpeechTTS(text, true);
-                    }
-                });
-            } catch (error) {
-                console.error('ResponsiveVoice error:', error);
-                playWebSpeechTTS(text, true);
+                alert(`Ошибка воспроизведения: ${text}`);
             }
         }
 
         async function playWebSpeechTTS(text, isRussian = true) {
             try {
-                // Use improved Web Speech API as fallback
-                if ('speechSynthesis' in window) {
-                    // Wait for voices to load
-                    await new Promise(resolve => {
-                        if (speechSynthesis.getVoices().length > 0) {
-                            resolve();
-                        } else {
-                            speechSynthesis.onvoiceschanged = resolve;
-                        }
-                    });
-
-                    const utterance = new SpeechSynthesisUtterance(text);
-                    
-                    if (isRussian) {
-                        utterance.lang = 'ru-RU';
-                        utterance.rate = 0.75;
-                        utterance.pitch = 1.0;
-                        utterance.volume = 1.0;
-                        
-                        // Find the best Russian voice available
-                        const voices = speechSynthesis.getVoices();
-                        console.log('Available voices:', voices.filter(v => v.lang.startsWith('ru')).map(v => `${v.name} (${v.lang})`));
-                        
-                        const russianVoices = voices.filter(voice => 
-                            voice.lang.startsWith('ru') || 
-                            voice.lang === 'ru-RU' ||
-                            voice.name.toLowerCase().includes('russian') ||
-                            voice.name.toLowerCase().includes('русский')
-                        );
-                        
-                        // Prefer Google or premium voices if available
-                        const bestVoice = russianVoices.find(v => 
-                            v.name.toLowerCase().includes('google') ||
-                            v.name.toLowerCase().includes('premium') ||
-                            v.name.toLowerCase().includes('enhanced') ||
-                            v.name.toLowerCase().includes('natural')
-                        ) || russianVoices[0];
-                        
-                        if (bestVoice) {
-                            utterance.voice = bestVoice;
-                            console.log('Using Web Speech voice:', bestVoice.name);
-                        } else {
-                            console.log('No Russian voice found, using default');
-                        }
-                    } else {
-                        utterance.lang = 'en-US';
-                        utterance.rate = 0.8;
-                    }
-
-                    utterance.onend = () => {
-                        hideStopButton();
-                    };
-
-                    utterance.onerror = (event) => {
-                        hideStopButton();
-                        console.error('Web Speech error:', event.error);
-                    };
-
-                    // Create a pseudo audio object for consistent interface
-                    currentAudio = {
-                        pause: () => {
-                            speechSynthesis.cancel();
-                            hideStopButton();
-                        },
-                        currentTime: 0,
-                        paused: false
-                    };
-
-                    speechSynthesis.speak(utterance);
-                    console.log('Playing Web Speech audio');
-                } else {
-                    // Final fallback
-                    alert(`Audio: ${text}`);
-                    hideStopButton();
+                if (!('speechSynthesis' in window)) {
+                    throw new Error('Speech synthesis not supported');
                 }
+
+                // Cancel any ongoing speech
+                speechSynthesis.cancel();
+
+                // Wait for voices to load
+                await new Promise((resolve) => {
+                    const voices = speechSynthesis.getVoices();
+                    if (voices.length > 0) {
+                        resolve();
+                    } else {
+                        const loadVoices = () => {
+                            if (speechSynthesis.getVoices().length > 0) {
+                                speechSynthesis.removeEventListener('voiceschanged', loadVoices);
+                                resolve();
+                            }
+                        };
+                        speechSynthesis.addEventListener('voiceschanged', loadVoices);
+                        // Fallback timeout
+                        setTimeout(resolve, 1000);
+                    }
+                });
+
+                const utterance = new SpeechSynthesisUtterance(text);
+                
+                if (isRussian) {
+                    utterance.lang = 'ru-RU';
+                    utterance.rate = 0.8;
+                    utterance.pitch = 1.0;
+                    utterance.volume = 1.0;
+                    
+                    // Find the best available Russian voice
+                    const voices = speechSynthesis.getVoices();
+                    console.log('All available voices:', voices.map(v => `${v.name} (${v.lang}) ${v.localService ? 'Local' : 'Remote'}`));
+                    
+                    // Look for Russian voices in order of preference
+                    const russianVoices = voices.filter(voice => 
+                        voice.lang === 'ru-RU' ||
+                        voice.lang.startsWith('ru-') ||
+                        voice.lang === 'ru' ||
+                        voice.name.toLowerCase().includes('russian') ||
+                        voice.name.toLowerCase().includes('русский')
+                    );
+                    
+                    console.log('Russian voices found:', russianVoices.map(v => `${v.name} (${v.lang})`));
+                    
+                    // Prefer Google voices, then any Russian voice
+                    let selectedVoice = russianVoices.find(v => 
+                        v.name.toLowerCase().includes('google') ||
+                        v.name.toLowerCase().includes('yandex')
+                    );
+                    
+                    if (!selectedVoice) {
+                        selectedVoice = russianVoices.find(v => !v.localService); // Prefer remote voices
+                    }
+                    
+                    if (!selectedVoice) {
+                        selectedVoice = russianVoices[0]; // Any Russian voice
+                    }
+                    
+                    if (selectedVoice) {
+                        utterance.voice = selectedVoice;
+                        console.log('Selected voice:', selectedVoice.name, selectedVoice.lang);
+                    } else {
+                        console.log('No Russian voice found, using default with ru-RU lang');
+                    }
+                } else {
+                    utterance.lang = 'en-US';
+                    utterance.rate = 0.9;
+                }
+
+                // Set up event handlers
+                utterance.onstart = () => {
+                    console.log('Speech started for:', text);
+                };
+
+                utterance.onend = () => {
+                    console.log('Speech ended');
+                    hideStopButton();
+                };
+
+                utterance.onerror = (event) => {
+                    console.error('Speech error:', event.error, event.type);
+                    hideStopButton();
+                    
+                    // Don't show error for common issues
+                    if (event.error !== 'interrupted' && event.error !== 'canceled') {
+                        setTimeout(() => {
+                            alert(`Ошибка воспроизведения: ${event.error}`);
+                        }, 100);
+                    }
+                };
+
+                // Create current audio reference for stop functionality
+                currentAudio = {
+                    pause: () => {
+                        speechSynthesis.cancel();
+                        hideStopButton();
+                    },
+                    paused: false
+                };
+
+                // Speak the text
+                speechSynthesis.speak(utterance);
+                console.log('Started speaking:', text);
+
             } catch (error) {
-                console.error('Web Speech error:', error);
+                console.error('Web Speech TTS error:', error);
                 hideStopButton();
-                alert(`Ошибка: ${error.message}`);
+                throw error;
             }
         }
 
