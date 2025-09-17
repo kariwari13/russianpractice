@@ -390,8 +390,9 @@
         let isListening = false;
         let moduleStarted = false;
 
-        // Base URL for GitHub images
+        // Base URLs for GitHub content
         const imageBaseUrl = 'https://raw.githubusercontent.com/kariwari13/russianpractice/main/images/';
+        const audioBaseUrl = 'https://raw.githubusercontent.com/kariwari13/russianpractice/main/audio/';
 
         // Module data - strictly following letter introduction order
         const modules = {
@@ -458,42 +459,22 @@
             stopCurrentAudio();
         }
 
-        // TTS только с Web Speech API (временно, пока не загружены аудиофайлы)
-        async function playTextToSpeech(text, isRussian = true) {
+        // Audio playback using GitHub audio files
+        async function playTextToSpeech(text) {
             try {
                 stopCurrentAudio();
                 showStopButton();
                 
-                // Временно используем только Web Speech API
-                await playWebSpeechTTS(text, isRussian);
+                // Try to play custom audio first
+                const audioUrl = `${audioBaseUrl}${text.toLowerCase()}.mp3`;
+                console.log(`Trying to play audio: ${audioUrl}`);
                 
-                /* После загрузки аудиофайлов раскомментируйте:
-                if (isRussian) {
-                    const customAudioUrl = `${imageBaseUrl}audio/${text.toLowerCase()}.mp3`;
-                    const hasCustomAudio = await checkAudioExists(customAudioUrl);
-                    
-                    if (hasCustomAudio) {
-                        await playCustomAudio(customAudioUrl, text);
-                    } else {
-                        console.log(`No custom audio for ${text}, using Web Speech API`);
-                        await playWebSpeechTTS(text, isRussian);
-                    }
-                } else {
-                    await playWebSpeechTTS(text, isRussian);
-                }
-                */
+                await playCustomAudio(audioUrl, text);
+                
             } catch (error) {
-                console.error('TTS error:', error);
-                await playWebSpeechTTS(text, isRussian);
-            }
-        }
-
-        async function checkAudioExists(url) {
-            try {
-                const response = await fetch(url, { method: 'HEAD' });
-                return response.ok;
-            } catch (error) {
-                return false;
+                console.error('Audio playback error:', error);
+                // Fallback to Web Speech API if audio file fails
+                await playWebSpeechTTS(text);
             }
         }
 
@@ -516,14 +497,21 @@
                 currentAudio.onerror = (e) => {
                     console.error(`Custom audio error for ${text}:`, e);
                     hideStopButton();
-                    reject(new Error(`Custom audio failed: ${text}`));
+                    // Don't reject immediately, try Web Speech API as fallback
+                    playWebSpeechTTS(text).then(resolve).catch(reject);
                 };
                 
-                currentAudio.play().catch(reject);
+                currentAudio.play().catch((playError) => {
+                    console.error(`Audio play error for ${text}:`, playError);
+                    hideStopButton();
+                    // Fallback to Web Speech API
+                    playWebSpeechTTS(text).then(resolve).catch(reject);
+                });
             });
         }
 
-        async function playWebSpeechTTS(text, isRussian = true) {
+        // Fallback Web Speech API
+        async function playWebSpeechTTS(text) {
             try {
                 if (!('speechSynthesis' in window)) {
                     throw new Error('Speech synthesis not supported');
@@ -549,37 +537,35 @@
 
                 const utterance = new SpeechSynthesisUtterance(text);
                 
-                if (isRussian) {
-                    utterance.lang = 'ru-RU';
-                    utterance.rate = 0.8;
-                    utterance.pitch = 1.0;
-                    utterance.volume = 1.0;
-                    
-                    const voices = speechSynthesis.getVoices();
-                    const russianVoices = voices.filter(voice => 
-                        voice.lang === 'ru-RU' ||
-                        voice.lang.startsWith('ru-') ||
-                        voice.name.toLowerCase().includes('russian')
-                    );
-                    
-                    const selectedVoice = russianVoices.find(v => 
-                        v.name.toLowerCase().includes('google')
-                    ) || russianVoices[0];
-                    
-                    if (selectedVoice) {
-                        utterance.voice = selectedVoice;
-                        console.log('Using Web Speech voice:', selectedVoice.name);
-                    }
+                utterance.lang = 'ru-RU';
+                utterance.rate = 0.8;
+                utterance.pitch = 1.0;
+                utterance.volume = 1.0;
+                
+                const voices = speechSynthesis.getVoices();
+                const russianVoices = voices.filter(voice => 
+                    voice.lang === 'ru-RU' ||
+                    voice.lang.startsWith('ru-') ||
+                    voice.name.toLowerCase().includes('russian')
+                );
+                
+                const selectedVoice = russianVoices.find(v => 
+                    v.name.toLowerCase().includes('google')
+                ) || russianVoices[0];
+                
+                if (selectedVoice) {
+                    utterance.voice = selectedVoice;
+                    console.log('Using Web Speech fallback voice:', selectedVoice.name);
                 }
 
-                utterance.onstart = () => console.log('Web Speech started');
+                utterance.onstart = () => console.log('Web Speech fallback started');
                 utterance.onend = () => {
-                    console.log('Web Speech ended');
+                    console.log('Web Speech fallback ended');
                     hideStopButton();
                 };
                 utterance.onerror = (event) => {
                     if (event.error !== 'interrupted') {
-                        console.error('Web Speech error:', event.error);
+                        console.error('Web Speech fallback error:', event.error);
                     }
                     hideStopButton();
                 };
@@ -595,7 +581,7 @@
                 speechSynthesis.speak(utterance);
 
             } catch (error) {
-                console.error('Web Speech error:', error);
+                console.error('Web Speech fallback error:', error);
                 hideStopButton();
                 throw error;
             }
@@ -894,37 +880,12 @@
             document.getElementById('feedback').classList.add('hidden');
         }
 
-        function showFinalCongratulations() {
-            const content = document.querySelector('.learning-area');
-            const congratulations = document.createElement('div');
-            congratulations.className = 'congratulations';
-            congratulations.innerHTML = `
-                <h3>Amazing! You completed ALL modules!</h3>
-                <p>Congratulations! You've learned all the basic Russian letters and words!</p>
-                <p>You can now recognize and pronounce: М, А, К, О, Т, Е</p>
-                <p>Keep practicing these words to master Russian pronunciation!</p>
-            `;
-            
-            content.appendChild(congratulations);
-            
-            setTimeout(() => {
-                congratulations.remove();
-            }, 8000);
-        }
-
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             initSpeechRecognition();
             selectModule(1);
             
-            // Проверяем доступность Yandex WebSpeechKit
-            setTimeout(() => {
-                if (typeof ya !== 'undefined' && ya.speechkit) {
-                    console.log('Yandex WebSpeechKit loaded successfully');
-                } else {
-                    console.log('Yandex WebSpeechKit not available, using Web Speech API');
-                }
-            }, 2000);
+            console.log('Russian Learning Platform initialized with GitHub audio files');
             
             document.addEventListener('click', function() {
                 if (currentAudio && currentAudio.paused) {
