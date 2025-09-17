@@ -381,6 +381,8 @@
         </div>
     </div>
 
+    <script type="text/javascript" src="//download.yandex.ru/webspeechkit/webspeechkit-1.0.0.js"></script>
+    <script type="text/javascript" src="//download.yandex.ru/webspeechkit/webspeechkit-settings.js"></script>
     <script>
         // Global variables
         let currentModule = 1;
@@ -458,17 +460,20 @@
             stopCurrentAudio();
         }
 
-        // Yandex SpeechKit с CORS прокси
-        const YANDEX_API_KEY = 'AQVN1FSCgk8QkbRXUq6xNT9Bz8xJBo1z29oiSMhs';
-        const YANDEX_FOLDER_ID = 'b1gdsbq0b26gplmq89qk';
-
+        // TTS с поддержкой Yandex WebSpeechKit и fallback на Web Speech API
         async function playTextToSpeech(text, isRussian = true) {
             try {
                 stopCurrentAudio();
                 showStopButton();
 
                 if (isRussian) {
-                    await playYandexTTS(text);
+                    // Пробуем Yandex WebSpeechKit сначала
+                    if (typeof ya !== 'undefined' && ya.speechkit) {
+                        await playYandexWebTTS(text);
+                    } else {
+                        console.log('Yandex WebSpeechKit not available, using Web Speech API');
+                        await playWebSpeechTTS(text, isRussian);
+                    }
                 } else {
                     await playWebSpeechTTS(text, isRussian);
                 }
@@ -479,80 +484,45 @@
             }
         }
 
-        // Yandex SpeechKit через встроенную HTML5 audio генерацию
-        const YANDEX_API_KEY = 'AQVN1FSCgk8QkbRXUq6xNT9Bz8xJBo1z29oiSMhs';
-        const YANDEX_FOLDER_ID = 'b1gdsbq0b26gplmq89qk';
-
-        async function playTextToSpeech(text, isRussian = true) {
+        async function playYandexWebTTS(text) {
             try {
-                stopCurrentAudio();
-                showStopButton();
-
-                if (isRussian) {
-                    await playYandexTTSAudio(text);
-                } else {
-                    await playWebSpeechTTS(text, isRussian);
-                }
-            } catch (error) {
-                console.error('TTS error:', error);
-                console.log('Falling back to Web Speech API');
-                await playWebSpeechTTS(text, isRussian);
-            }
-        }
-
-        async function playYandexTTSAudio(text) {
-            try {
-                // Создаем скрытый audio элемент с прямой ссылкой на Yandex TTS
-                const params = new URLSearchParams({
-                    'text': text,
-                    'lang': 'ru-RU',
-                    'voice': 'alena',
-                    'emotion': 'neutral',
-                    'speed': '0.9',
-                    'format': 'mp3',
-                    'folderId': YANDEX_FOLDER_ID,
-                    'key': YANDEX_API_KEY
+                console.log('Using Yandex WebSpeechKit TTS');
+                
+                const tts = ya.speechkit.Tts({
+                    speaker: 'jane',    // женский голос
+                    emotion: 'neutral', 
+                    gender: 'female'
                 });
 
-                const audioUrl = `https://tts.api.cloud.yandex.net/speech/v1/tts:synthesize?${params.toString()}`;
-                
-                console.log('Trying direct Yandex audio URL...');
-                
-                // Создаем audio элемент
-                currentAudio = new Audio();
-                currentAudio.crossOrigin = "anonymous";
-                
-                // Пробуем загрузить аудио
-                await new Promise((resolve, reject) => {
-                    currentAudio.oncanplaythrough = () => {
-                        console.log('Yandex audio loaded successfully');
-                        resolve();
-                    };
-                    
-                    currentAudio.onerror = (e) => {
-                        console.error('Direct Yandex audio failed:', e);
-                        reject(new Error('Direct audio loading failed'));
-                    };
-                    
-                    currentAudio.onended = () => {
-                        console.log('Yandex audio ended');
+                // Создаем Promise для отслеживания завершения
+                const playPromise = new Promise((resolve, reject) => {
+                    tts.speak(text, {
+                        onDone: () => {
+                            console.log('Yandex TTS completed');
+                            hideStopButton();
+                            resolve();
+                        },
+                        onError: (err) => {
+                            console.error('Yandex TTS error:', err);
+                            hideStopButton();
+                            reject(err);
+                        }
+                    });
+                });
+
+                // Создаем псевдо audio объект для управления
+                currentAudio = {
+                    pause: () => {
+                        tts.stop();
                         hideStopButton();
-                    };
-                    
-                    // Устанавливаем источник
-                    currentAudio.src = audioUrl;
-                    currentAudio.load();
-                    
-                    // Timeout через 5 секунд
-                    setTimeout(() => reject(new Error('Audio loading timeout')), 5000);
-                });
+                    },
+                    paused: false
+                };
 
-                // Проигрываем аудио
-                await currentAudio.play();
-                console.log('Yandex TTS playing via direct audio');
-
+                await playPromise;
+                
             } catch (error) {
-                console.error('Direct Yandex audio error:', error);
+                console.error('Yandex WebSpeechKit error:', error);
                 throw error;
             }
         }
@@ -602,18 +572,18 @@
                     
                     if (selectedVoice) {
                         utterance.voice = selectedVoice;
-                        console.log('Using fallback voice:', selectedVoice.name);
+                        console.log('Using Web Speech voice:', selectedVoice.name);
                     }
                 }
 
-                utterance.onstart = () => console.log('Fallback speech started');
+                utterance.onstart = () => console.log('Web Speech started');
                 utterance.onend = () => {
-                    console.log('Fallback speech ended');
+                    console.log('Web Speech ended');
                     hideStopButton();
                 };
                 utterance.onerror = (event) => {
                     if (event.error !== 'interrupted') {
-                        console.error('Fallback speech error:', event.error);
+                        console.error('Web Speech error:', event.error);
                     }
                     hideStopButton();
                 };
@@ -629,83 +599,7 @@
                 speechSynthesis.speak(utterance);
 
             } catch (error) {
-                console.error('Fallback speech error:', error);
-                hideStopButton();
-                throw error;
-            }
-        }
-
-        async function playWebSpeechTTS(text, isRussian = true) {
-            try {
-                if (!('speechSynthesis' in window)) {
-                    throw new Error('Speech synthesis not supported');
-                }
-
-                speechSynthesis.cancel();
-
-                await new Promise((resolve) => {
-                    const voices = speechSynthesis.getVoices();
-                    if (voices.length > 0) {
-                        resolve();
-                    } else {
-                        const loadVoices = () => {
-                            if (speechSynthesis.getVoices().length > 0) {
-                                speechSynthesis.removeEventListener('voiceschanged', loadVoices);
-                                resolve();
-                            }
-                        };
-                        speechSynthesis.addEventListener('voiceschanged', loadVoices);
-                        setTimeout(resolve, 1000);
-                    }
-                });
-
-                const utterance = new SpeechSynthesisUtterance(text);
-                
-                if (isRussian) {
-                    utterance.lang = 'ru-RU';
-                    utterance.rate = 0.8;
-                    utterance.pitch = 1.0;
-                    utterance.volume = 1.0;
-                    
-                    const voices = speechSynthesis.getVoices();
-                    const russianVoices = voices.filter(voice => 
-                        voice.lang === 'ru-RU' ||
-                        voice.lang.startsWith('ru-') ||
-                        voice.name.toLowerCase().includes('russian')
-                    );
-                    
-                    const selectedVoice = russianVoices.find(v => 
-                        v.name.toLowerCase().includes('google')
-                    ) || russianVoices[0];
-                    
-                    if (selectedVoice) {
-                        utterance.voice = selectedVoice;
-                        console.log('Using fallback voice:', selectedVoice.name);
-                    }
-                }
-
-                utterance.onstart = () => console.log('Fallback speech started');
-                utterance.onend = () => {
-                    console.log('Fallback speech ended');
-                    hideStopButton();
-                };
-                utterance.onerror = (event) => {
-                    console.error('Fallback speech error:', event.error);
-                    hideStopButton();
-                };
-
-                currentAudio = {
-                    pause: () => {
-                        speechSynthesis.cancel();
-                        hideStopButton();
-                    },
-                    paused: false
-                };
-
-                speechSynthesis.speak(utterance);
-
-            } catch (error) {
-                console.error('Fallback speech error:', error);
+                console.error('Web Speech error:', error);
                 hideStopButton();
                 throw error;
             }
@@ -733,7 +627,6 @@
                     console.log('Recognized:', transcript);
                     showFeedback(`You said: ${transcript}`, 'success');
                     
-                    // Automatically play correct pronunciation and move to next
                     setTimeout(() => {
                         playCorrectPronunciation();
                     }, 1000);
@@ -793,7 +686,6 @@
             currentWordIndex = 0;
             moduleStarted = false;
             
-            // Update UI
             document.querySelectorAll('.module-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.module-btn')[moduleNum - 1].classList.add('active');
             
@@ -804,11 +696,10 @@
             updateProgress();
         }
 
-        async function startCurrentModule() {
+        function startCurrentModule() {
             moduleStarted = true;
             currentWordIndex = 0;
             
-            // Show letters but don't play them - just display
             updateInstructionArea();
             
             setTimeout(() => {
@@ -821,13 +712,11 @@
             const word = modules[currentModule].words[currentWordIndex];
             document.getElementById('currentWord').textContent = word;
             
-            // Show image if available
             const wordImage = document.getElementById('wordImage');
             if (modules[currentModule].images[word]) {
                 wordImage.src = imageBaseUrl + modules[currentModule].images[word];
                 wordImage.classList.remove('hidden');
                 
-                // Add error handling for images
                 wordImage.onerror = () => {
                     console.log('Image failed to load:', imageBaseUrl + modules[currentModule].images[word]);
                     wordImage.classList.add('hidden');
@@ -837,7 +726,7 @@
             }
         }
 
-        async function playCurrentWord() {
+        function playCurrentWord() {
             if (!moduleStarted || currentWordIndex >= modules[currentModule].words.length) {
                 return;
             }
@@ -845,7 +734,6 @@
             const word = modules[currentModule].words[currentWordIndex];
             playTextToSpeech(word);
             
-            // Enable microphone after listening
             setTimeout(() => {
                 document.getElementById('micBtn').disabled = false;
             }, 1000);
@@ -855,7 +743,6 @@
             currentWordIndex++;
             
             if (currentWordIndex >= modules[currentModule].words.length) {
-                // Module complete
                 showCongratulations();
                 moduleStarted = false;
                 updateButtons();
@@ -863,7 +750,6 @@
                 displayCurrentWord();
                 updateButtons();
                 
-                // Auto-play next word
                 setTimeout(() => {
                     playCurrentWord();
                 }, 500);
@@ -910,7 +796,7 @@
             } else {
                 startBtn.disabled = true;
                 listenBtn.disabled = false;
-                micBtn.disabled = true; // Enabled after listening
+                micBtn.disabled = true;
                 nextBtn.disabled = false;
             }
         }
@@ -946,7 +832,6 @@
                 <p>You completed Module ${currentModule}! Great job learning Russian pronunciation!</p>
             `;
             
-            // Add special messages
             if (currentModule === 1) {
                 congratulations.innerHTML += '<p>You just learned your first Russian word МАМА (mama)! 👶</p>';
             } else if (currentModule === 2) {
@@ -961,11 +846,19 @@
         }
 
         // Initialize
-        document.addEventListener('DOMContentLoaded', async function() {
+        document.addEventListener('DOMContentLoaded', function() {
             initSpeechRecognition();
             selectModule(1);
             
-            // Handle audio end events globally
+            // Проверяем доступность Yandex WebSpeechKit
+            setTimeout(() => {
+                if (typeof ya !== 'undefined' && ya.speechkit) {
+                    console.log('Yandex WebSpeechKit loaded successfully');
+                } else {
+                    console.log('Yandex WebSpeechKit not available, using Web Speech API');
+                }
+            }, 2000);
+            
             document.addEventListener('click', function() {
                 if (currentAudio && currentAudio.paused) {
                     hideStopButton();
@@ -973,7 +866,6 @@
             });
         });
 
-        // Prevent audio overlap
         window.addEventListener('beforeunload', function() {
             stopCurrentAudio();
         });
