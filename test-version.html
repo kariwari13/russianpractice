@@ -480,64 +480,88 @@
         }
 
         async function playYandexTTS(text) {
-            try {
-                // Используем CORS прокси для обхода ограничений
-                const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
-                const targetUrl = 'https://tts.api.cloud.yandex.net/speech/v1/tts:synthesize';
-                
-                const requestBody = new URLSearchParams({
-                    'text': text,
-                    'lang': 'ru-RU',
-                    'voice': 'alena',
-                    'emotion': 'neutral',
-                    'speed': '0.9',
-                    'format': 'mp3',
-                    'folderId': YANDEX_FOLDER_ID
-                });
+            const proxies = [
+                'https://api.allorigins.win/raw?url=',
+                'https://corsproxy.io/?',
+                'https://cors-anywhere.herokuapp.com/',
+                'https://thingproxy.freeboard.io/fetch/'
+            ];
 
-                console.log('Making Yandex TTS request through proxy...');
+            for (let i = 0; i < proxies.length; i++) {
+                try {
+                    console.log(`Trying proxy ${i + 1}:`, proxies[i]);
+                    
+                    const targetUrl = 'https://tts.api.cloud.yandex.net/speech/v1/tts:synthesize';
+                    const requestBody = new URLSearchParams({
+                        'text': text,
+                        'lang': 'ru-RU',
+                        'voice': 'alena',
+                        'emotion': 'neutral',
+                        'speed': '0.9',
+                        'format': 'mp3',
+                        'folderId': YANDEX_FOLDER_ID
+                    });
 
-                const response = await fetch(proxyUrl + targetUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Api-Key ${YANDEX_API_KEY}`,
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                        'X-Requested-With': 'XMLHttpRequest'
-                    },
-                    body: requestBody
-                });
+                    let response;
+                    
+                    if (proxies[i].includes('allorigins')) {
+                        // AllOrigins требует особый подход
+                        const encodedUrl = encodeURIComponent(targetUrl + '?' + requestBody.toString());
+                        response = await fetch(proxies[i] + encodedUrl, {
+                            method: 'GET',
+                            headers: {
+                                'Authorization': `Api-Key ${YANDEX_API_KEY}`,
+                            }
+                        });
+                    } else {
+                        // Стандартные прокси
+                        response = await fetch(proxies[i] + targetUrl, {
+                            method: 'POST',
+                            headers: {
+                                'Authorization': `Api-Key ${YANDEX_API_KEY}`,
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                            body: requestBody
+                        });
+                    }
 
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    throw new Error(`Yandex TTS failed: ${response.status} - ${errorText}`);
+                    if (response.ok) {
+                        const audioBlob = await response.blob();
+                        console.log(`Proxy ${i + 1} success! Audio size:`, audioBlob.size);
+                        
+                        if (audioBlob.size > 0) {
+                            const audioUrl = URL.createObjectURL(audioBlob);
+                            currentAudio = new Audio(audioUrl);
+
+                            currentAudio.onended = () => {
+                                console.log('Yandex audio ended');
+                                hideStopButton();
+                                URL.revokeObjectURL(audioUrl);
+                            };
+
+                            currentAudio.onerror = () => {
+                                console.error('Yandex audio playback error');
+                                hideStopButton();
+                                URL.revokeObjectURL(audioUrl);
+                                throw new Error('Audio playback failed');
+                            };
+
+                            await currentAudio.play();
+                            console.log('Yandex TTS playing successfully via proxy', i + 1);
+                            return; // Success - exit function
+                        }
+                    }
+                    
+                    console.log(`Proxy ${i + 1} failed with status:`, response.status);
+                    
+                } catch (error) {
+                    console.error(`Proxy ${i + 1} error:`, error.message);
                 }
-
-                const audioBlob = await response.blob();
-                console.log('Yandex audio blob received:', audioBlob.size, 'bytes');
-
-                const audioUrl = URL.createObjectURL(audioBlob);
-                currentAudio = new Audio(audioUrl);
-
-                currentAudio.onended = () => {
-                    console.log('Yandex audio ended');
-                    hideStopButton();
-                    URL.revokeObjectURL(audioUrl);
-                };
-
-                currentAudio.onerror = () => {
-                    console.error('Yandex audio playback error');
-                    hideStopButton();
-                    URL.revokeObjectURL(audioUrl);
-                    throw new Error('Audio playback failed');
-                };
-
-                await currentAudio.play();
-                console.log('Yandex TTS playing successfully');
-
-            } catch (error) {
-                console.error('Yandex TTS error:', error);
-                throw error;
             }
+            
+            // Если все прокси не сработали
+            throw new Error('All proxy attempts failed');
         }
 
         async function playWebSpeechTTS(text, isRussian = true) {
