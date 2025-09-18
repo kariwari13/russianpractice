@@ -892,4 +892,68 @@
         }
 
         function updateButtons() {
-            const startBtn = document.getElementById('start
+            const startBtn = document.getElementById('startBtn');
+            const listenBtn = document.getElementById('listenBtn');
+            const micBtn = document.getElementById('micBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            
+            if (!moduleStarted) {
+                startBtn.disabled = false;
+                startBtn.textContent = 'Start Module';
+                listenBtn.disabled = true;
+                micBtn.disabled = true;
+                nextBtn.disabled = true;
+            } else if (currentWordIndex >= modules[currentModule].words.length) {
+                startBtn.disabled = false;
+                startBtn.textContent = 'Restart Module';
+                listenBtn.disabled = true;
+                micBtn.disabled = true;
+                nextBtn.disabled = true;
+            } else {
+                startBtn.disabled = true;
+                listenBtn.disabled = false;
+                micBtn.disabled = true;
+                nextBtn.disabled = false;
+            }
+        }
+
+        function updateProgress() {
+            if (!moduleStarted) {
+                document.getElementById('progressFill').style.width = '0%';
+                return;
+            }
+            
+            const totalWords = modules[currentModule].words.length;
+            const progress = (currentWordIndex / totalWords) * 100;
+            document.getElementById('progressFill').style.width = `${progress}%`;
+        }
+
+        function showFeedback(message, type) {
+            const feedback = document.getElementById('feedback');
+            feedback.textContent = message;
+            feedback.className = `feedback ${type}`;
+            feedback.classList.remove('hidden');
+        }
+
+        function hideFeedback() {
+            document.getElementById('feedback').classList.add('hidden');
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            initSpeechRecognition();
+            console.log('Russian Learning Platform initialized');
+            
+            document.addEventListener('click', function() {
+                if (currentAudio && currentAudio.paused) {
+                    hideStopButton();
+                }
+            });
+        });
+
+        window.addEventListener('beforeunload', function() {
+            stopCurrentAudio();
+        });
+    </script>
+</body>
+</html>
