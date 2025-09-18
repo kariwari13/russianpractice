@@ -151,6 +151,13 @@
             color: white;
         }
 
+        .unlock-message {
+            color: #6c757d;
+            font-style: italic;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
         .learning-area {
             text-align: center;
             min-height: 200px;
@@ -683,9 +690,10 @@
                 <h4>Choose Exercise Type:</h4>
                 <div class="exercise-buttons">
                     <button class="exercise-btn active" onclick="setExerciseType('pronunciation')">🔊 Pronunciation</button>
-                    <button class="exercise-btn" onclick="setExerciseType('dictation')">✍️ Dictation</button>
-                    <button class="exercise-btn" onclick="setExerciseType('recognition')">🎯 Sound Recognition</button>
+                    <button class="exercise-btn hidden" id="dictationBtn" onclick="setExerciseType('dictation')">✍️ Dictation</button>
+                    <button class="exercise-btn hidden" id="recognitionBtn" onclick="setExerciseType('recognition')">🎯 Sound Recognition</button>
                 </div>
+                <p class="unlock-message hidden" id="unlockMessage">Complete all 6 modules to unlock Dictation and Sound Recognition!</p>
             </div>
 
             <div class="learning-area">
@@ -705,8 +713,9 @@
                     <p>Now we introduce <strong>stress marks</strong> - this is crucial for authentic Russian pronunciation!</p>
                     <p>Russian has only <strong>one stress per word</strong>. The stressed vowel is pronounced slightly longer and clearer.</p>
                     <p>For example: ма́ма (the first 'а' is stressed)</p>
+                    <p><strong>Important note:</strong> Stress marks (́) are only written for Russian learners. Native speakers don't write them in everyday life - they know where to stress naturally!</p>
                     <p>If a word has only one vowel, no stress mark is needed (like кот, том).</p>
-                    <p><strong>Important:</strong> When 'о' is unstressed, it sounds almost like 'а'. When stressed, it sounds like 'o' in "orange".</p>
+                    <p><strong>Key rule:</strong> When 'о' is unstressed, it sounds almost like 'а'. When stressed, it sounds like 'o' in "orange".</p>
                 </div>
 
                 <div class="current-word" id="currentWord">Ready to Start</div>
@@ -803,6 +812,7 @@
         let moduleStarted = false;
         let learningStarted = false;
         let exerciseType = 'pronunciation';
+        let allModulesCompleted = false; // Track if modules 1-6 are complete
         
         // Sound Recognition variables
         let currentChoices = [];
@@ -929,7 +939,7 @@
             updateStats();
         }
 
-        // FIXED: Simple nextWord function without delays or temporary messages
+        // FIXED: Simple nextWord function that tracks module completion
         function nextWord() {
             hideFeedback();
             if (exerciseType === 'dictation') {
@@ -945,7 +955,9 @@
                     nextModule();
                     return;
                 } else {
-                    // All modules complete
+                    // All modules 1-6 complete - unlock advanced exercises
+                    allModulesCompleted = true;
+                    unlockAdvancedExercises();
                     showFinalCompletion();
                     moduleStarted = false;
                     updateButtons();
@@ -958,12 +970,21 @@
             updateButtons();
             
             setTimeout(() => {
-                if (exerciseType !== 'dictation') {
+                if (exerciseType === 'pronunciation') {
                     playCurrentWord();
                 }
             }, 500);
             
             updateProgress();
+        }
+
+        function unlockAdvancedExercises() {
+            document.getElementById('dictationBtn').classList.remove('hidden');
+            document.getElementById('recognitionBtn').classList.remove('hidden');
+            document.getElementById('unlockMessage').classList.add('hidden');
+            
+            // Show achievement for completing all modules
+            showAchievement('🎓', 'All Modules Complete!', 'Dictation and Sound Recognition unlocked!');
         }
 
         function nextModule() {
@@ -987,14 +1008,102 @@
             content.appendChild(congratulations);
         }
 
+        // Create a virtual module 7 for advanced exercises using all AKMOTE words
+        const advancedModule = {
+            letters: ['М', 'А', 'К', 'О', 'Т', 'Е'],
+            words: ['МАМА', 'МАК', 'МАКАКА', 'КОМА', 'КАКАО', 'МОККО', 'КОТ', 'ТОМ', 'АТОМ', 'ТОМАТ', 'АТАКА', 'АКТ', 'ТАКТ', 'МОТО', 'МЕТА', 'ТЕМА', 'МЕМ', 'МЕККА', 'МАКЕТ', 'КОМЕТА'],
+            stressedWords: ['МА́МА', 'МЕ́ТА', 'ТЕ́МА', 'МЕ́ККА', 'МАКЕ́Т', 'МАКА́КА', 'АТА́КА', 'ТОМА́Т', 'А́ТОМ', 'КО́МА', 'МО́ТО', 'МО́ККО'],
+            instruction: "Advanced Practice: Use all your learned words for dictation and sound recognition exercises!",
+            images: {}
+        };
+
         function setExerciseType(type) {
+            if ((type === 'dictation' || type === 'recognition') && !allModulesCompleted) {
+                showFeedback('Complete all 6 modules first to unlock this exercise!', 'error');
+                return;
+            }
+            
             exerciseType = type;
             
             document.querySelectorAll('.exercise-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
             
-            updateExerciseDisplay();
+            // Switch to advanced module for dictation and recognition
+            if (type === 'dictation' || type === 'recognition') {
+                // Create a practice session with all words
+                currentWordIndex = 0;
+                moduleStarted = true;
+                updateAdvancedExerciseDisplay();
+            } else {
+                updateExerciseDisplay();
+            }
+            
             updateButtons();
+        }
+
+        function updateAdvancedExerciseDisplay() {
+            const dictationArea = document.getElementById('dictationArea');
+            const pronunciationScore = document.getElementById('pronunciationScore');
+            const recognitionArea = document.getElementById('recognitionArea');
+            const currentWordEl = document.getElementById('currentWord');
+            const wordImage = document.getElementById('wordImage');
+            
+            dictationArea.classList.add('hidden');
+            pronunciationScore.classList.add('hidden');
+            recognitionArea.classList.add('hidden');
+            wordImage.classList.add('hidden');
+            
+            if (exerciseType === 'dictation') {
+                currentWordEl.textContent = '?';
+                dictationArea.classList.remove('hidden');
+                document.getElementById('dictationInput').value = '';
+            } else if (exerciseType === 'recognition') {
+                currentWordEl.textContent = 'Listen carefully...';
+                recognitionArea.classList.remove('hidden');
+                setTimeout(() => {
+                    setupAdvancedSoundRecognition();
+                }, 200);
+            }
+        }
+
+        function setupAdvancedSoundRecognition() {
+            // Use all available pairs for advanced practice
+            const allPairs = soundPairs.filter(pair => 
+                advancedModule.words.includes(pair[0]) && advancedModule.words.includes(pair[1])
+            );
+            
+            if (allPairs.length === 0) {
+                showFeedback('No sound recognition exercises available', 'error');
+                return;
+            }
+            
+            const randomPair = allPairs[Math.floor(Math.random() * allPairs.length)];
+            currentChoices = [...randomPair];
+            
+            correctChoice = Math.floor(Math.random() * 2);
+            selectedChoice = -1;
+            
+            const displayOrder = Math.random() > 0.5 ? [0, 1] : [1, 0];
+            
+            document.getElementById('choice1').textContent = currentChoices[displayOrder[0]];
+            document.getElementById('choice2').textContent = currentChoices[displayOrder[1]];
+            
+            if (displayOrder[0] === correctChoice) {
+                correctChoice = 0;
+            } else {
+                correctChoice = 1;
+            }
+            
+            document.querySelectorAll('.choice-btn').forEach(btn => {
+                btn.classList.remove('selected', 'correct', 'incorrect');
+            });
+            
+            setTimeout(() => {
+                const wordToPlay = correctChoice === 0 ? 
+                    document.getElementById('choice1').textContent :
+                    document.getElementById('choice2').textContent;
+                playTextToSpeech(wordToPlay);
+            }, 1000);
         }
 
         function updateExerciseDisplay() {
@@ -1035,21 +1144,35 @@
                 learnedWords.push(...modules[i].words);
             }
             
-            // Filter sound pairs to only include words that have been learned
+            // For module 6 (stress rules), only use words with stress marks
+            const wordsToUse = currentModule === 6 ? 
+                learnedWords.filter(word => word.includes('́')) : 
+                learnedWords;
+            
+            // Filter sound pairs to only include appropriate words
             const availablePairs = soundPairs.filter(pair => 
-                learnedWords.includes(pair[0]) && learnedWords.includes(pair[1])
+                wordsToUse.includes(pair[0]) && wordsToUse.includes(pair[1])
             );
             
             if (availablePairs.length === 0) {
                 // Fallback: create a pair from current module words
                 const currentWords = modules[currentModule].words;
-                if (currentWords.length >= 2) {
-                    const randomWord1 = currentWords[0];
-                    const randomWord2 = currentWords[1];
-                    currentChoices = [randomWord1, randomWord2];
+                if (currentModule === 6) {
+                    // For stress module, only use stressed words
+                    const stressedWords = currentWords.filter(word => word.includes('́'));
+                    if (stressedWords.length >= 2) {
+                        currentChoices = [stressedWords[0], stressedWords[1]];
+                    } else {
+                        showFeedback('No sound recognition exercises available yet', 'error');
+                        return;
+                    }
                 } else {
-                    showFeedback('No sound recognition exercises available yet', 'error');
-                    return;
+                    if (currentWords.length >= 2) {
+                        currentChoices = [currentWords[0], currentWords[1]];
+                    } else {
+                        showFeedback('No sound recognition exercises available yet', 'error');
+                        return;
+                    }
                 }
             } else {
                 // Select a random pair from available pairs
@@ -1420,7 +1543,11 @@
             }
 
             try {
-                recognition.start();
+                // Reset recognition state before starting
+                recognition.abort(); // Stop any previous recognition
+                setTimeout(() => {
+                    recognition.start();
+                }, 100);
             } catch (error) {
                 console.error('Recognition start error:', error);
                 showFeedback('Could not start recording', 'error');
@@ -1432,6 +1559,12 @@
             const micBtn = document.getElementById('micBtn');
             micBtn.classList.remove('listening');
             micBtn.textContent = '🎤 Speak';
+            
+            // Re-enable mic button for next use
+            setTimeout(() => {
+                micBtn.disabled = false;
+            }, 500);
+            
             hideFeedback();
         }
 
@@ -1493,6 +1626,9 @@
             document.getElementById('navigationArea').classList.remove('hidden');
             document.getElementById('statsPanel').classList.remove('hidden');
             document.getElementById('levelProgress').classList.remove('hidden');
+            
+            // Show unlock message initially
+            document.getElementById('unlockMessage').classList.remove('hidden');
             
             selectModule(1);
             updateStats();
@@ -1570,31 +1706,89 @@
         }
 
         function playCurrentWord() {
+            if (exerciseType === 'dictation' && allModulesCompleted) {
+                // Advanced dictation mode - use random word from all learned words
+                const randomWord = advancedModule.words[Math.floor(Math.random() * advancedModule.words.length)];
+                document.getElementById('currentWord').textContent = '?';
+                document.getElementById('wordImage').classList.add('hidden');
+                playTextToSpeech(randomWord);
+                document.getElementById('dictationInput').focus();
+                // Store the current word for checking
+                window.currentDictationWord = randomWord;
+                return;
+            } else if (exerciseType === 'recognition' && allModulesCompleted) {
+                // Advanced sound recognition - replay current audio
+                if (currentChoices.length > 0) {
+                    const wordToPlay = correctChoice === 0 ? 
+                        document.getElementById('choice1').textContent :
+                        document.getElementById('choice2').textContent;
+                    playTextToSpeech(wordToPlay);
+                }
+                return;
+            }
+            
+            // Regular pronunciation mode for modules 1-6
             if (!moduleStarted || currentWordIndex >= modules[currentModule].words.length) {
                 return;
             }
             
             const word = modules[currentModule].words[currentWordIndex];
-            
-            if (exerciseType === 'dictation') {
-                document.getElementById('currentWord').textContent = '?';
-                document.getElementById('wordImage').classList.add('hidden');
-                playTextToSpeech(word);
-                document.getElementById('dictationInput').focus();
-            } else if (exerciseType === 'recognition') {
-                // For sound recognition, don't play the current word, 
-                // setupSoundRecognition() handles the audio
-                return;
-            } else {
-                displayCurrentWord();
-                playTextToSpeech(word);
-            }
+            displayCurrentWord();
+            playTextToSpeech(word);
             
             setTimeout(() => {
                 if (exerciseType === 'pronunciation') {
                     document.getElementById('micBtn').disabled = false;
                 }
             }, 1000);
+        }
+
+        function checkDictation() {
+            const userInput = document.getElementById('dictationInput').value.trim().toUpperCase();
+            
+            let correctWord;
+            if (allModulesCompleted && exerciseType === 'dictation') {
+                // Advanced dictation mode
+                correctWord = window.currentDictationWord;
+            } else {
+                // Regular module-based dictation
+                correctWord = modules[currentModule].words[currentWordIndex];
+            }
+            
+            const correctWordClean = correctWord.replace(/́/g, '');
+            
+            if (userInput === correctWordClean) {
+                showFeedback(`Correct! The word was: ${correctWord}`, 'success');
+                stats.currentStreak++;
+                addExp(20);
+                
+                if (allModulesCompleted) {
+                    // In advanced mode, generate new word automatically
+                    setTimeout(() => {
+                        const newRandomWord = advancedModule.words[Math.floor(Math.random() * advancedModule.words.length)];
+                        document.getElementById('dictationInput').value = '';
+                        window.currentDictationWord = newRandomWord;
+                        playTextToSpeech(newRandomWord);
+                        document.getElementById('dictationInput').focus();
+                        hideFeedback();
+                    }, 2000);
+                } else {
+                    setTimeout(() => {
+                        document.getElementById('nextBtn').disabled = false;
+                    }, 1500);
+                }
+            } else {
+                showFeedback(`Try again! You wrote: "${userInput}"`, 'error');
+                stats.currentStreak = 0;
+                setTimeout(() => {
+                    document.getElementById('dictationInput').value = '';
+                    document.getElementById('dictationInput').focus();
+                }, 1500);
+            }
+            
+            stats.wordsPracticed++;
+            checkAchievements();
+            updateStats();
         }
 
         function updateButtons() {
