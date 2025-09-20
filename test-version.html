@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Russian Phonetic Learning Platform</title>
+    <title>Learn Russian Reading - Easy Method</title>
     <style>
         * {
             box-sizing: border-box;
@@ -19,7 +19,7 @@
         }
 
         .container {
-            max-width: 600px;
+            max-width: 700px;
             margin: 0 auto;
             background: white;
             border-radius: 15px;
@@ -57,6 +57,26 @@
 
         .content {
             padding: 30px;
+        }
+
+        .intro-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid #28a745;
+        }
+
+        .intro-section h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+
+        .intro-section p {
+            color: #495057;
+            line-height: 1.7;
+            margin-bottom: 12px;
         }
 
         .module-selector {
@@ -184,6 +204,26 @@
         .instruction p {
             color: #6c757d;
             line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .stress-explanation {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .stress-explanation h3 {
+            color: #856404;
+            margin-bottom: 15px;
+        }
+
+        .stress-explanation p {
+            color: #856404;
+            line-height: 1.6;
+            margin-bottom: 10px;
         }
 
         .letters-introduced {
@@ -214,6 +254,131 @@
             border-radius: 10px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             display: block;
+        }
+
+        .pronunciation-score {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .score-circle {
+            display: inline-block;
+            width: 60px;
+            height: 60px;
+            border: 4px solid white;
+            border-radius: 50%;
+            line-height: 52px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin: 10px;
+        }
+
+        .stats-panel {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .stats-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 8px 0;
+        }
+
+        .stats-label {
+            font-weight: 500;
+            color: #495057;
+        }
+
+        .stats-value {
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .achievement-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #ffd89b, #19547b);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            z-index: 1000;
+            animation: achievementSlide 3s ease-out;
+        }
+
+        @keyframes achievementSlide {
+            0% { transform: translate(-50%, -150%); }
+            20% { transform: translate(-50%, -50%); }
+            80% { transform: translate(-50%, -50%); }
+            100% { transform: translate(-50%, -150%); }
+        }
+
+        .achievement-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .achievement-icon {
+            font-size: 3rem;
+            animation: bounce 0.6s infinite alternate;
+        }
+
+        @keyframes bounce {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.2); }
+        }
+
+        .achievement-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .achievement-desc {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .level-progress {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .level-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-weight: 500;
+            color: #495057;
+        }
+
+        .exp-bar {
+            background: #e9ecef;
+            height: 12px;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .exp-fill {
+            background: linear-gradient(90deg, #28a745, #20c997);
+            height: 100%;
+            border-radius: 6px;
+            transition: width 0.3s ease;
+            width: 0%;
         }
 
         .feedback {
@@ -264,6 +429,24 @@
             transform: none;
         }
 
+        .final-message {
+            background: linear-gradient(135deg, #ffd89b, #19547b);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .final-message h2 {
+            margin-bottom: 15px;
+            font-size: 1.6rem;
+        }
+
+        .hidden {
+            display: none;
+        }
+
         @media (max-width: 768px) {
             .container {
                 margin: 0;
@@ -306,60 +489,105 @@
                 min-width: 80px;
             }
         }
-
-        .hidden {
-            display: none;
-        }
-
-        .congratulations {
-            background: linear-gradient(135deg, #28a745, #20c997);
-            color: white;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            margin: 20px 0;
-        }
-
-        .congratulations h3 {
-            margin-bottom: 10px;
-        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>Russian Phonetic Learning</h1>
-            <p>Learn Russian pronunciation step by step</p>
+            <h1>Learn Russian Reading - Easy Method</h1>
+            <p>Master Russian letters through smart grouping</p>
             <div class="progress-bar">
                 <div class="progress-fill" id="progressFill"></div>
             </div>
         </div>
 
         <div class="content">
-            <div class="module-selector">
+            <!-- Introduction Section -->
+            <div class="intro-section" id="introSection">
+                <h2>🚀 Learn to Read Russian the Smart Way!</h2>
+                <p>Learning to read Russian isn't difficult when you follow the right method given on this platform.</p>
+                <p>All words here are international, so you'll easily guess their translations.</p>
+                <p><strong>First group:</strong> Letters that look and sound similar to Latin letters - <strong>А К М О Т Е</strong></p>
+                <button class="control-btn" onclick="startLearning()">Start Learning!</button>
+            </div>
+
+            <div class="module-selector hidden" id="moduleSelector">
                 <button class="module-btn active" onclick="selectModule(1)">М, А</button>
                 <button class="module-btn" onclick="selectModule(2)">+ К</button>
                 <button class="module-btn" onclick="selectModule(3)">+ О</button>
                 <button class="module-btn" onclick="selectModule(4)">+ Т</button>
                 <button class="module-btn" onclick="selectModule(5)">+ Е</button>
+                <button class="module-btn" onclick="selectModule(6)">Stress Rules</button>
             </div>
 
             <div class="learning-area">
-                <div class="letters-introduced" id="lettersIntroduced">
+                <div class="letters-introduced hidden" id="lettersIntroduced">
                     <h4>Letters Introduced:</h4>
                     <div class="letters" id="currentLetters">М  А</div>
                 </div>
 
-                <div class="instruction" id="instructionArea">
-                    <h3>Welcome to Russian Phonetic Learning!</h3>
-                    <p>Great news! The Russian letters А, К, М, О, Т look and sound very similar to Latin letters A, K, M, O, T - so this will be really easy! We'll start with the most basic combinations and build up to real words. Click "Start Module" to begin!</p>
+                <div class="instruction hidden" id="instructionArea">
+                    <h3>🚀 Learn to Read Russian the Smart Way!</h3>
+                    <p>Learning to read Russian isn't difficult when you follow the right method given on this platform.</p>
+                </div>
+
+                <!-- Stress explanation section -->
+                <div class="stress-explanation hidden" id="stressExplanation">
+                    <h3>🎯 Russian Stress - The Secret of Russian Accent</h3>
+                    <p>Now we introduce <strong>stress marks</strong> - this is crucial for authentic Russian pronunciation!</p>
+                    <p>Russian has only <strong>one stress per word</strong>. The stressed vowel is pronounced slightly longer and clearer.</p>
+                    <p>For example: ма́ма (the first 'а' is stressed)</p>
+                    <p><strong>Important note:</strong> Stress marks (́) are only written for Russian learners. Native speakers don't write them in everyday life - they know where to stress naturally!</p>
+                    <p>If a word has only one vowel, no stress mark is needed (like кот, том).</p>
+                    <p><strong>Key rule:</strong> When 'о' is unstressed, it sounds almost like 'а'. When stressed, it sounds like 'o' in "orange".</p>
                 </div>
 
                 <div class="current-word" id="currentWord">Ready to Start</div>
                 
                 <img class="word-image hidden" id="wordImage" alt="Word illustration">
 
-                <div class="controls">
+                <!-- Pronunciation Score -->
+                <div class="pronunciation-score hidden" id="pronunciationScore">
+                    <div>Pronunciation Accuracy</div>
+                    <div class="score-circle" id="scoreCircle">--%</div>
+                    <div id="scoreMessage">Click speak to try!</div>
+                </div>
+
+                <!-- Gamification Elements -->
+                <div class="achievement-popup hidden" id="achievementPopup">
+                    <div class="achievement-content">
+                        <div class="achievement-icon">🏆</div>
+                        <div class="achievement-title" id="achievementTitle">Achievement Unlocked!</div>
+                        <div class="achievement-desc" id="achievementDesc">Great job!</div>
+                    </div>
+                </div>
+
+                <div class="level-progress hidden" id="levelProgress">
+                    <div class="level-info">
+                        <span>Level <span id="currentLevel">1</span></span>
+                        <span id="levelExp">0/100 XP</span>
+                    </div>
+                    <div class="exp-bar">
+                        <div class="exp-fill" id="expFill"></div>
+                    </div>
+                </div>
+                <div class="stats-panel hidden" id="statsPanel">
+                    <h4>Your Progress</h4>
+                    <div class="stats-row">
+                        <span class="stats-label">Words Practiced:</span>
+                        <span class="stats-value" id="wordsPracticed">0</span>
+                    </div>
+                    <div class="stats-row">
+                        <span class="stats-label">Average Score:</span>
+                        <span class="stats-value" id="averageScore">--%</span>
+                    </div>
+                    <div class="stats-row">
+                        <span class="stats-label">Current Streak:</span>
+                        <span class="stats-value" id="currentStreak">0</span>
+                    </div>
+                </div>
+
+                <div class="controls hidden" id="controlsArea">
                     <button class="control-btn" id="listenBtn" onclick="playCurrentWord()">
                         🔊 Listen
                     </button>
@@ -373,8 +601,7 @@
 
                 <div class="feedback hidden" id="feedback"></div>
 
-                <div class="navigation">
-                    <button class="nav-btn" id="startBtn" onclick="startCurrentModule()">Start Module</button>
+                <div class="navigation hidden" id="navigationArea">
                     <button class="nav-btn" id="nextBtn" onclick="nextWord()" disabled>Next Word</button>
                 </div>
             </div>
@@ -389,11 +616,37 @@
         let recognition = null;
         let isListening = false;
         let moduleStarted = false;
+        let learningStarted = false;
+        
+        // Statistics and Gamification
+        let stats = {
+            wordsPracticed: 0,
+            totalScore: 0,
+            scores: [],
+            currentStreak: 0,
+            bestStreak: 0,
+            exp: 0,
+            level: 1,
+            achievements: [],
+            badges: []
+        };
 
-        // Base URL for GitHub images
+        // Achievement definitions
+        const achievements = {
+            firstWord: { icon: '🎯', title: 'First Step!', desc: 'Completed your first word!' },
+            streak5: { icon: '🔥', title: 'On Fire!', desc: '5 words in a row!' },
+            streak10: { icon: '⚡', title: 'Lightning Speed!', desc: '10 words in a row!' },
+            perfectModule: { icon: '🌟', title: 'Perfectionist!', desc: 'Perfect score in a module!' },
+            speedDemon: { icon: '🚀', title: 'Speed Demon!', desc: 'Completed 20 words!' },
+            moduleComplete: { icon: '🏆', title: 'Module Master!', desc: 'Completed your first module!' },
+            cometComplete: { icon: '☄️', title: 'Comet Rider!', desc: 'Mastered the КОМЕТА group!' }
+        };
+
+        // Base URLs for GitHub content
         const imageBaseUrl = 'https://raw.githubusercontent.com/kariwari13/russianpractice/main/images/';
+        const audioBaseUrl = 'https://raw.githubusercontent.com/kariwari13/russianpractice/main/audio/';
 
-        // Module data - strictly following letter introduction order
+        // Module data
         const modules = {
             1: {
                 letters: ['М', 'А'],
@@ -406,6 +659,7 @@
                 words: ['МАК', 'МАКАКА'],
                 instruction: "Module 2: Adding К (K). Now we can make more combinations! МАКАКА is monkey!",
                 images: { 
+                    'МАК': 'mac.jpg.png',
                     'МАКАКА': 'monkey.jpg.png'
                 }
             },
@@ -430,11 +684,163 @@
             },
             5: {
                 letters: ['М', 'А', 'К', 'О', 'Т', 'Е'],
-                words: ['МЕТА', 'ТЕМА', 'КОМЕТА', 'МЕМ', 'МЕККА', 'МАКЕТ'],
-                instruction: "Module 5: Adding Е (YE). Learn these advanced words! МЕМ means 'meme', МЕККА means 'Mecca', and МАКЕТ means 'model'.",
+                words: ['МЕТА', 'ТЕМА', 'МЕМ', 'МЕККА', 'МАКЕТ', 'КОМЕТА'],
+                instruction: "Module 5: Adding Е (YE). Learn these advanced words! МЕМ means 'meme', МЕККА means 'Mecca', and МАКЕТ means 'maquette'.",
                 images: { 'КОМЕТА': 'comet.jpg.png' }
+            },
+            6: {
+                letters: ['М', 'А', 'К', 'О', 'Т', 'Е'],
+                words: ['МА́МА', 'МЕ́ТА', 'ТЕ́МА', 'МЕ́ККА', 'МАКЕ́Т', 'МАКА́КА', 'АТА́КА', 'КОТ', 'ТОМ', 'АКТ', 'ТАКТ', 'ТОМА́Т', 'А́ТОМ', 'КО́МА', 'МО́ТО', 'МО́ККО'],
+                instruction: "Module 6: Stress Rules. Learn how stress changes pronunciation. Words with one vowel don't need stress marks. Notice how unstressed 'о' sounds like 'а', but stressed 'о' sounds like 'o' in 'orange'.",
+                images: {}
             }
         };
+
+        function startLearning() {
+            learningStarted = true;
+            document.getElementById('introSection').classList.add('hidden');
+            document.getElementById('moduleSelector').classList.remove('hidden');
+            document.getElementById('lettersIntroduced').classList.remove('hidden');
+            document.getElementById('instructionArea').classList.remove('hidden');
+            document.getElementById('controlsArea').classList.remove('hidden');
+            document.getElementById('navigationArea').classList.remove('hidden');
+            document.getElementById('statsPanel').classList.remove('hidden');
+            document.getElementById('levelProgress').classList.remove('hidden');
+            
+            selectModule(1);
+            updateStats();
+            updateLevelDisplay();
+        }
+
+        function nextWord() {
+            hideFeedback();
+            
+            currentWordIndex++;
+            
+            if (currentWordIndex >= modules[currentModule].words.length) {
+                // Module complete - check if there's next module
+                if (currentModule < Object.keys(modules).length) {
+                    // Go directly to next module
+                    nextModule();
+                    return;
+                } else {
+                    // All modules complete
+                    showFinalCompletion();
+                    moduleStarted = false;
+                    updateButtons();
+                    return;
+                }
+            }
+            
+            // Regular next word
+            updateExerciseDisplay();
+            updateButtons();
+            updateProgress();
+        }
+
+        function nextModule() {
+            if (currentModule < Object.keys(modules).length) {
+                selectModule(currentModule + 1);
+            }
+        }
+
+        function showFinalCompletion() {
+            const content = document.querySelector('.learning-area');
+            const congratulations = document.createElement('div');
+            congratulations.className = 'final-message';
+            congratulations.innerHTML = `
+                <h2>🎉 Congratulations! You've completed all modules!</h2>
+                <p>You've mastered the first letter group with stress understanding!</p>
+                <p>Ready for the next letter group: <strong>False Friends (P=R, H=N, C=S, etc.)</strong></p>
+                <p>These letters look familiar but sound different - it will be fun!</p>
+                <button class="control-btn" onclick="alert('False Friends module coming soon!')" style="margin-top: 15px;">Coming Soon: False Friends</button>
+            `;
+            content.appendChild(congratulations);
+        }
+
+        function updateExerciseDisplay() {
+            const pronunciationScore = document.getElementById('pronunciationScore');
+            pronunciationScore.classList.remove('hidden');
+            
+            if (moduleStarted && currentWordIndex < modules[currentModule].words.length) {
+                displayCurrentWord();
+                // Enable microphone immediately when word is displayed
+                document.getElementById('micBtn').disabled = false;
+            }
+        }
+
+        // Gamification Functions
+        function addExp(points) {
+            stats.exp += points;
+            
+            const expNeeded = stats.level * 100;
+            if (stats.exp >= expNeeded) {
+                stats.level++;
+                stats.exp = stats.exp - expNeeded;
+                showAchievement('🆙', 'Level Up!', `Welcome to Level ${stats.level}!`);
+            }
+            
+            updateLevelDisplay();
+        }
+
+        function updateLevelDisplay() {
+            document.getElementById('currentLevel').textContent = stats.level;
+            const expNeeded = stats.level * 100;
+            document.getElementById('levelExp').textContent = `${stats.exp}/${expNeeded} XP`;
+            
+            const expPercent = (stats.exp / expNeeded) * 100;
+            document.getElementById('expFill').style.width = expPercent + '%';
+        }
+
+        function showAchievement(icon, title, description) {
+            const popup = document.getElementById('achievementPopup');
+            document.getElementById('achievementTitle').textContent = title;
+            document.getElementById('achievementDesc').textContent = description;
+            popup.querySelector('.achievement-icon').textContent = icon;
+            
+            popup.classList.remove('hidden');
+            
+            setTimeout(() => {
+                popup.classList.add('hidden');
+            }, 3000);
+        }
+
+        function checkAchievements() {
+            // First word achievement
+            if (stats.wordsPracticed === 1 && !stats.achievements.includes('firstWord')) {
+                stats.achievements.push('firstWord');
+                showAchievement(achievements.firstWord.icon, achievements.firstWord.title, achievements.firstWord.desc);
+                addExp(25);
+            }
+            
+            // Streak achievements
+            if (stats.currentStreak === 5 && !stats.achievements.includes('streak5')) {
+                stats.achievements.push('streak5');
+                stats.badges.push('🔥 Fire Streak');
+                showAchievement(achievements.streak5.icon, achievements.streak5.title, achievements.streak5.desc);
+                addExp(50);
+            }
+            
+            if (stats.currentStreak === 10 && !stats.achievements.includes('streak10')) {
+                stats.achievements.push('streak10');
+                stats.badges.push('⚡ Lightning Fast');
+                showAchievement(achievements.streak10.icon, achievements.streak10.title, achievements.streak10.desc);
+                addExp(100);
+            }
+            
+            // Speed achievement
+            if (stats.wordsPracticed === 20 && !stats.achievements.includes('speedDemon')) {
+                stats.achievements.push('speedDemon');
+                stats.badges.push('🚀 Speed Master');
+                showAchievement(achievements.speedDemon.icon, achievements.speedDemon.title, achievements.speedDemon.desc);
+                addExp(75);
+            }
+            
+            // Update stats display with best streak
+            if (stats.currentStreak > stats.bestStreak) {
+                stats.bestStreak = stats.currentStreak;
+            }
+        }
 
         // Audio management
         function stopCurrentAudio() {
@@ -458,21 +864,54 @@
             stopCurrentAudio();
         }
 
-        // Optimized Web Speech API - reliable and good quality
-        async function playTextToSpeech(text, isRussian = true) {
+        async function playTextToSpeech(text) {
             try {
                 stopCurrentAudio();
                 showStopButton();
-
-                // Use Web Speech API - works great with Google Russian voice
-                await playWebSpeechTTS(text, isRussian);
+                
+                const cleanText = text.replace(/́/g, '').toLowerCase();
+                const audioUrl = `${audioBaseUrl}${cleanText}.mp3`;
+                console.log(`Trying to play audio: ${audioUrl}`);
+                
+                await playCustomAudio(audioUrl, text);
+                
             } catch (error) {
-                console.error('Text-to-speech error:', error);
-                hideStopButton();
+                console.error('Audio playback error:', error);
+                await playWebSpeechTTS(text);
             }
         }
 
-        async function playWebSpeechTTS(text, isRussian = true) {
+        async function playCustomAudio(audioUrl, text) {
+            return new Promise((resolve, reject) => {
+                console.log(`Playing custom audio for: ${text}`);
+                
+                currentAudio = new Audio(audioUrl);
+                
+                currentAudio.onloadeddata = () => {
+                    console.log(`Custom audio loaded: ${text}`);
+                };
+                
+                currentAudio.onended = () => {
+                    console.log(`Custom audio ended: ${text}`);
+                    hideStopButton();
+                    resolve();
+                };
+                
+                currentAudio.onerror = (e) => {
+                    console.error(`Custom audio error for ${text}:`, e);
+                    hideStopButton();
+                    playWebSpeechTTS(text).then(resolve).catch(reject);
+                };
+                
+                currentAudio.play().catch((playError) => {
+                    console.error(`Audio play error for ${text}:`, playError);
+                    hideStopButton();
+                    playWebSpeechTTS(text).then(resolve).catch(reject);
+                });
+            });
+        }
+
+        async function playWebSpeechTTS(text) {
             try {
                 if (!('speechSynthesis' in window)) {
                     throw new Error('Speech synthesis not supported');
@@ -480,7 +919,6 @@
 
                 speechSynthesis.cancel();
 
-                // Wait for voices to load
                 await new Promise((resolve) => {
                     const voices = speechSynthesis.getVoices();
                     if (voices.length > 0) {
@@ -499,41 +937,36 @@
 
                 const utterance = new SpeechSynthesisUtterance(text);
                 
-                if (isRussian) {
-                    utterance.lang = 'ru-RU';
-                    utterance.rate = 0.8;
-                    utterance.pitch = 1.0;
-                    utterance.volume = 1.0;
-                    
-                    const voices = speechSynthesis.getVoices();
-                    const russianVoices = voices.filter(voice => 
-                        voice.lang === 'ru-RU' ||
-                        voice.lang.startsWith('ru-') ||
-                        voice.name.toLowerCase().includes('russian') ||
-                        voice.name.toLowerCase().includes('русский')
-                    );
-                    
-                    // Prefer Google voices - they have the best quality
-                    const selectedVoice = russianVoices.find(v => 
-                        v.name.toLowerCase().includes('google')
-                    ) || russianVoices.find(v => !v.localService) || russianVoices[0];
-                    
-                    if (selectedVoice) {
-                        utterance.voice = selectedVoice;
-                        console.log('Using voice:', selectedVoice.name);
-                    }
-                } else {
-                    utterance.lang = 'en-US';
-                    utterance.rate = 0.9;
+                utterance.lang = 'ru-RU';
+                utterance.rate = 0.8;
+                utterance.pitch = 1.0;
+                utterance.volume = 1.0;
+                
+                const voices = speechSynthesis.getVoices();
+                const russianVoices = voices.filter(voice => 
+                    voice.lang === 'ru-RU' ||
+                    voice.lang.startsWith('ru-') ||
+                    voice.name.toLowerCase().includes('russian')
+                );
+                
+                const selectedVoice = russianVoices.find(v => 
+                    v.name.toLowerCase().includes('google')
+                ) || russianVoices[0];
+                
+                if (selectedVoice) {
+                    utterance.voice = selectedVoice;
+                    console.log('Using Web Speech fallback voice:', selectedVoice.name);
                 }
 
-                utterance.onstart = () => console.log('Speech started for:', text);
+                utterance.onstart = () => console.log('Web Speech fallback started');
                 utterance.onend = () => {
-                    console.log('Speech ended successfully');
+                    console.log('Web Speech fallback ended');
                     hideStopButton();
                 };
                 utterance.onerror = (event) => {
-                    console.error('Speech error:', event.error);
+                    if (event.error !== 'interrupted') {
+                        console.error('Web Speech fallback error:', event.error);
+                    }
                     hideStopButton();
                 };
 
@@ -546,10 +979,9 @@
                 };
 
                 speechSynthesis.speak(utterance);
-                console.log('Started speaking:', text);
 
             } catch (error) {
-                console.error('Web Speech error:', error);
+                console.error('Web Speech fallback error:', error);
                 hideStopButton();
                 throw error;
             }
@@ -575,12 +1007,11 @@
                 recognition.onresult = (event) => {
                     const transcript = event.results[0][0].transcript;
                     console.log('Recognized:', transcript);
-                    showFeedback(`You said: ${transcript}`, 'success');
                     
-                    // Automatically play correct pronunciation and move to next
-                    setTimeout(() => {
-                        playCorrectPronunciation();
-                    }, 1000);
+                    const currentWord = modules[currentModule].words[currentWordIndex];
+                    const score = calculatePronunciationScore(transcript, currentWord);
+                    showPronunciationScore(score, transcript, currentWord);
+                    showFeedback(`You said: "${transcript}"`, score >= 70 ? 'success' : 'error');
                 };
 
                 recognition.onerror = (event) => {
@@ -607,7 +1038,10 @@
             }
 
             try {
-                recognition.start();
+                recognition.abort();
+                setTimeout(() => {
+                    recognition.start();
+                }, 100);
             } catch (error) {
                 console.error('Recognition start error:', error);
                 showFeedback('Could not start recording', 'error');
@@ -619,25 +1053,142 @@
             const micBtn = document.getElementById('micBtn');
             micBtn.classList.remove('listening');
             micBtn.textContent = '🎤 Speak';
+            
+            setTimeout(() => {
+                micBtn.disabled = false;
+            }, 500);
+            
             hideFeedback();
         }
 
-        function playCorrectPronunciation() {
-            const currentWord = modules[currentModule].words[currentWordIndex];
-            playTextToSpeech(currentWord).then(() => {
-                setTimeout(() => {
-                    nextWord();
-                }, 1000);
-            });
+        function calculatePronunciationScore(spoken, target) {
+            const spokenClean = spoken.toLowerCase().replace(/[^\u0400-\u04FF\s]/g, '');
+            const targetClean = target.toLowerCase().replace(/[^\u0400-\u04FF\s]/g, '');
+            
+            if (spokenClean === targetClean) return 100;
+            
+            const matrix = [];
+            const n = spokenClean.length;
+            const m = targetClean.length;
+            
+            for (let i = 0; i <= n; i++) {
+                matrix[i] = [i];
+            }
+            for (let j = 0; j <= m; j++) {
+                matrix[0][j] = j;
+            }
+            
+            for (let i = 1; i <= n; i++) {
+                for (let j = 1; j <= m; j++) {
+                    if (spokenClean.charAt(i - 1) === targetClean.charAt(j - 1)) {
+                        matrix[i][j] = matrix[i - 1][j - 1];
+                    } else {
+                        matrix[i][j] = Math.min(
+                            matrix[i - 1][j - 1] + 1,
+                            matrix[i][j - 1] + 1,
+                            matrix[i - 1][j] + 1
+                        );
+                    }
+                }
+            }
+            
+            const maxLen = Math.max(n, m);
+            if (maxLen === 0) return 100;
+            
+            const similarity = ((maxLen - matrix[n][m]) / maxLen) * 100;
+            return Math.max(0, Math.round(similarity));
         }
 
-        // Module management
+        function showPronunciationScore(score, spoken, target) {
+            const scoreCircle = document.getElementById('scoreCircle');
+            const scoreMessage = document.getElementById('scoreMessage');
+            
+            scoreCircle.textContent = score + '%';
+            
+            if (score >= 90) {
+                scoreMessage.textContent = 'Perfect! 🌟';
+                scoreCircle.style.borderColor = '#28a745';
+                addExp(25);
+            } else if (score >= 70) {
+                scoreMessage.textContent = 'Good job! 👍';
+                scoreCircle.style.borderColor = '#ffc107';
+                addExp(15);
+            } else if (score >= 50) {
+                scoreMessage.textContent = 'Keep trying! 💪';
+                scoreCircle.style.borderColor = '#fd7e14';
+                addExp(5);
+            } else {
+                scoreMessage.textContent = 'Try again! 🔄';
+                scoreCircle.style.borderColor = '#dc3545';
+            }
+            
+            stats.scores.push(score);
+            stats.wordsPracticed++;
+            stats.totalScore += score;
+            
+            if (score >= 70) {
+                stats.currentStreak++;
+                stats.bestStreak = Math.max(stats.bestStreak, stats.currentStreak);
+            } else {
+                stats.currentStreak = 0;
+            }
+            
+            checkAchievements();
+            updateStats();
+            
+            if (score >= 70) {
+                setTimeout(() => {
+                    document.getElementById('nextBtn').disabled = false;
+                }, 1500);
+            }
+        }
+
+        function playCurrentWord() {
+            if (!moduleStarted || currentWordIndex >= modules[currentModule].words.length) {
+                return;
+            }
+            
+            const word = modules[currentModule].words[currentWordIndex];
+            displayCurrentWord();
+            playTextToSpeech(word);
+        }
+
+        function updateButtons() {
+            const listenBtn = document.getElementById('listenBtn');
+            const micBtn = document.getElementById('micBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            
+            if (!moduleStarted) {
+                listenBtn.disabled = true;
+                micBtn.disabled = true;
+                nextBtn.disabled = true;
+            } else if (currentWordIndex >= modules[currentModule].words.length) {
+                listenBtn.disabled = true;
+                micBtn.disabled = true;
+                nextBtn.disabled = true;
+            } else {
+                listenBtn.disabled = false;
+                micBtn.disabled = false;
+                nextBtn.disabled = false;
+                listenBtn.textContent = '🔊 Listen';
+            }
+        }
+
+        function updateStats() {
+            document.getElementById('wordsPracticed').textContent = stats.wordsPracticed;
+            
+            const avgScore = stats.scores.length > 0 
+                ? Math.round(stats.totalScore / stats.scores.length)
+                : 0;
+            document.getElementById('averageScore').textContent = avgScore + '%';
+            document.getElementById('currentStreak').textContent = stats.currentStreak;
+        }
+
         function selectModule(moduleNum) {
             currentModule = moduleNum;
             currentWordIndex = 0;
-            moduleStarted = false;
+            moduleStarted = true;
             
-            // Update UI
             document.querySelectorAll('.module-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.module-btn')[moduleNum - 1].classList.add('active');
             
@@ -646,32 +1197,24 @@
             resetWordDisplay();
             updateButtons();
             updateProgress();
-        }
-
-        async function startCurrentModule() {
-            moduleStarted = true;
-            currentWordIndex = 0;
+            updateExerciseDisplay();
             
-            // Show letters but don't play them - just display
-            updateInstructionArea();
-            
-            setTimeout(() => {
-                displayCurrentWord();
-                updateButtons();
-            }, 500);
+            if (moduleNum === 6) {
+                document.getElementById('stressExplanation').classList.remove('hidden');
+            } else {
+                document.getElementById('stressExplanation').classList.add('hidden');
+            }
         }
 
         function displayCurrentWord() {
             const word = modules[currentModule].words[currentWordIndex];
             document.getElementById('currentWord').textContent = word;
             
-            // Show image if available
             const wordImage = document.getElementById('wordImage');
             if (modules[currentModule].images[word]) {
                 wordImage.src = imageBaseUrl + modules[currentModule].images[word];
                 wordImage.classList.remove('hidden');
                 
-                // Add error handling for images
                 wordImage.onerror = () => {
                     console.log('Image failed to load:', imageBaseUrl + modules[currentModule].images[word]);
                     wordImage.classList.add('hidden');
@@ -681,42 +1224,6 @@
             }
         }
 
-        async function playCurrentWord() {
-            if (!moduleStarted || currentWordIndex >= modules[currentModule].words.length) {
-                return;
-            }
-            
-            const word = modules[currentModule].words[currentWordIndex];
-            playTextToSpeech(word);
-            
-            // Enable microphone after listening
-            setTimeout(() => {
-                document.getElementById('micBtn').disabled = false;
-            }, 1000);
-        }
-
-        function nextWord() {
-            currentWordIndex++;
-            
-            if (currentWordIndex >= modules[currentModule].words.length) {
-                // Module complete
-                showCongratulations();
-                moduleStarted = false;
-                updateButtons();
-            } else {
-                displayCurrentWord();
-                updateButtons();
-                
-                // Auto-play next word
-                setTimeout(() => {
-                    playCurrentWord();
-                }, 500);
-            }
-            
-            updateProgress();
-        }
-
-        // UI updates
         function updateLettersDisplay() {
             document.getElementById('currentLetters').textContent = modules[currentModule].letters.join('  ');
         }
@@ -731,32 +1238,6 @@
             document.getElementById('currentWord').textContent = 'Ready to Start';
             document.getElementById('wordImage').classList.add('hidden');
             hideFeedback();
-        }
-
-        function updateButtons() {
-            const startBtn = document.getElementById('startBtn');
-            const listenBtn = document.getElementById('listenBtn');
-            const micBtn = document.getElementById('micBtn');
-            const nextBtn = document.getElementById('nextBtn');
-            
-            if (!moduleStarted) {
-                startBtn.disabled = false;
-                startBtn.textContent = 'Start Module';
-                listenBtn.disabled = true;
-                micBtn.disabled = true;
-                nextBtn.disabled = true;
-            } else if (currentWordIndex >= modules[currentModule].words.length) {
-                startBtn.disabled = false;
-                startBtn.textContent = 'Restart Module';
-                listenBtn.disabled = true;
-                micBtn.disabled = true;
-                nextBtn.disabled = true;
-            } else {
-                startBtn.disabled = true;
-                listenBtn.disabled = false;
-                micBtn.disabled = true; // Enabled after listening
-                nextBtn.disabled = false;
-            }
         }
 
         function updateProgress() {
@@ -781,35 +1262,11 @@
             document.getElementById('feedback').classList.add('hidden');
         }
 
-        function showCongratulations() {
-            const content = document.querySelector('.learning-area');
-            const congratulations = document.createElement('div');
-            congratulations.className = 'congratulations';
-            congratulations.innerHTML = `
-                <h3>Congratulations! 🎉</h3>
-                <p>You completed Module ${currentModule}! Great job learning Russian pronunciation!</p>
-            `;
-            
-            // Add special messages
-            if (currentModule === 1) {
-                congratulations.innerHTML += '<p>You just learned your first Russian word МАМА (mama)! 👶</p>';
-            } else if (currentModule === 2) {
-                congratulations.innerHTML += '<p>From mama to monkey (МАКАКА)! 🐵</p>';
-            }
-            
-            content.appendChild(congratulations);
-            
-            setTimeout(() => {
-                congratulations.remove();
-            }, 5000);
-        }
-
         // Initialize
-        document.addEventListener('DOMContentLoaded', async function() {
+        document.addEventListener('DOMContentLoaded', function() {
             initSpeechRecognition();
-            selectModule(1);
+            console.log('Russian Learning Platform initialized');
             
-            // Handle audio end events globally
             document.addEventListener('click', function() {
                 if (currentAudio && currentAudio.paused) {
                     hideStopButton();
@@ -817,12 +1274,9 @@
             });
         });
 
-        // Prevent audio overlap
         window.addEventListener('beforeunload', function() {
             stopCurrentAudio();
         });
     </script>
 </body>
 </html>
-
-
