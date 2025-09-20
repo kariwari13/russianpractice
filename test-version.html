@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Learn Russian Reading - Easy Method</title>
+    <title>Group 2: False Friends - Russian Reading</title>
     <style>
         * {
             box-sizing: border-box;
@@ -28,10 +28,34 @@
         }
 
         .header {
-            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            background: linear-gradient(135deg, #dc3545, #c82333);
             color: white;
             padding: 20px;
             text-align: center;
+            position: relative;
+        }
+
+        .nav-links {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-link {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-1px);
         }
 
         .header h1 {
@@ -64,7 +88,7 @@
             padding: 25px;
             border-radius: 10px;
             margin: 20px 0;
-            border-left: 4px solid #28a745;
+            border-left: 4px solid #dc3545;
         }
 
         .intro-section h2 {
@@ -104,9 +128,9 @@
         }
 
         .module-btn.active {
-            background: #667eea;
+            background: #dc3545;
             color: white;
-            border-color: #667eea;
+            border-color: #dc3545;
         }
 
         .learning-area {
@@ -122,6 +146,14 @@
             text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
         }
 
+        .letter-p {
+            color: #e91e63;
+        }
+
+        .letter-v {
+            color: #9c27b0;
+        }
+
         .controls {
             display: flex;
             justify-content: center;
@@ -130,7 +162,7 @@
         }
 
         .control-btn {
-            background: #667eea;
+            background: #dc3545;
             color: white;
             border: none;
             padding: 15px 25px;
@@ -146,7 +178,7 @@
         }
 
         .control-btn:hover {
-            background: #5a6fd8;
+            background: #c82333;
             transform: translateY(-2px);
             box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
@@ -193,7 +225,7 @@
             padding: 20px;
             border-radius: 10px;
             margin: 20px 0;
-            border-left: 4px solid #667eea;
+            border-left: 4px solid #dc3545;
         }
 
         .instruction h3 {
@@ -207,31 +239,13 @@
             margin-bottom: 10px;
         }
 
-        .stress-explanation {
-            background: #fff3cd;
-            border: 1px solid #ffeaa7;
-            padding: 20px;
-            border-radius: 10px;
-            margin: 20px 0;
-        }
-
-        .stress-explanation h3 {
-            color: #856404;
-            margin-bottom: 15px;
-        }
-
-        .stress-explanation p {
-            color: #856404;
-            line-height: 1.6;
-            margin-bottom: 10px;
-        }
-
         .letters-introduced {
-            background: #e8f4f8;
+            background: #fff5f5;
             padding: 15px;
             border-radius: 8px;
             margin: 15px 0;
             text-align: center;
+            border: 1px solid #fecaca;
         }
 
         .letters-introduced h4 {
@@ -242,7 +256,7 @@
         .letters {
             font-size: 1.5rem;
             font-weight: bold;
-            color: #667eea;
+            color: #dc3545;
             letter-spacing: 5px;
         }
 
@@ -257,7 +271,7 @@
         }
 
         .pronunciation-score {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #dc3545, #c82333);
             color: white;
             padding: 15px;
             border-radius: 10px;
@@ -297,7 +311,7 @@
         }
 
         .stats-value {
-            color: #667eea;
+            color: #dc3545;
             font-weight: bold;
         }
 
@@ -458,6 +472,12 @@
                 padding: 15px;
             }
 
+            .nav-links {
+                position: static;
+                justify-content: center;
+                margin-bottom: 10px;
+            }
+
             .header h1 {
                 font-size: 1.5rem;
             }
@@ -494,8 +514,12 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>Learn Russian Reading - Easy Method</h1>
-            <p>Master Russian letters through smart grouping</p>
+            <div class="nav-links">
+                <a href="../index.html" class="nav-link">🏠 Home</a>
+                <a href="../group1/index.html" class="nav-link">← Group 1</a>
+            </div>
+            <h1>Group 2: False Friends</h1>
+            <p>Letters that look familiar but sound different</p>
             <div class="progress-bar">
                 <div class="progress-fill" id="progressFill"></div>
             </div>
@@ -504,42 +528,32 @@
         <div class="content">
             <!-- Introduction Section -->
             <div class="intro-section" id="introSection">
-                <h2>🚀 Learn to Read Russian the Smart Way!</h2>
-                <p>Learning to read Russian isn't difficult when you follow the right method given on this platform.</p>
-                <p>All words here are international, so you'll easily guess their translations.</p>
-                <p><strong>First group:</strong> Letters that look and sound similar to Latin letters - <strong>А К М О Т Е</strong></p>
+                <h2>⚠️ False Friends - Deceptive Letters!</h2>
+                <p>These Russian letters look like English letters but sound completely different!</p>
+                <p>Don't be fooled - <strong>Р sounds like R, В sounds like V, Н sounds like N</strong></p>
+                <p><strong>Group 2:</strong> False Friends - <strong>Р В Н С И У Х</strong></p>
                 <button class="control-btn" onclick="startLearning()">Start Learning!</button>
             </div>
 
             <div class="module-selector hidden" id="moduleSelector">
-                <button class="module-btn active" onclick="selectModule(1)">М, А</button>
-                <button class="module-btn" onclick="selectModule(2)">+ К</button>
-                <button class="module-btn" onclick="selectModule(3)">+ О</button>
-                <button class="module-btn" onclick="selectModule(4)">+ Т</button>
-                <button class="module-btn" onclick="selectModule(5)">+ Е</button>
-                <button class="module-btn" onclick="selectModule(6)">Stress Rules</button>
+                <button class="module-btn active" onclick="selectModule(1)">Р</button>
+                <button class="module-btn" onclick="selectModule(2)">Р + В</button>
+                <button class="module-btn" onclick="selectModule(3)">+ Н</button>
+                <button class="module-btn" onclick="selectModule(4)">+ С</button>
+                <button class="module-btn" onclick="selectModule(5)">+ И</button>
+                <button class="module-btn" onclick="selectModule(6)">+ У</button>
+                <button class="module-btn" onclick="selectModule(7)">+ Х</button>
             </div>
 
             <div class="learning-area">
                 <div class="letters-introduced hidden" id="lettersIntroduced">
                     <h4>Letters Introduced:</h4>
-                    <div class="letters" id="currentLetters">М  А</div>
+                    <div class="letters" id="currentLetters">Р</div>
                 </div>
 
                 <div class="instruction hidden" id="instructionArea">
-                    <h3>🚀 Learn to Read Russian the Smart Way!</h3>
+                    <h3>🚀 Learn False Friends the Smart Way!</h3>
                     <p>Learning to read Russian isn't difficult when you follow the right method given on this platform.</p>
-                </div>
-
-                <!-- Stress explanation section -->
-                <div class="stress-explanation hidden" id="stressExplanation">
-                    <h3>🎯 Russian Stress - The Secret of Russian Accent</h3>
-                    <p>Now we introduce <strong>stress marks</strong> - this is crucial for authentic Russian pronunciation!</p>
-                    <p>Russian has only <strong>one stress per word</strong>. The stressed vowel is pronounced slightly longer and clearer.</p>
-                    <p>For example: ма́ма (the first 'а' is stressed)</p>
-                    <p><strong>Important note:</strong> Stress marks (́) are only written for Russian learners. Native speakers don't write them in everyday life - they know where to stress naturally!</p>
-                    <p>If a word has only one vowel, no stress mark is needed (like кот, том).</p>
-                    <p><strong>Key rule:</strong> When 'о' is unstressed, it sounds almost like 'а'. When stressed, it sounds like 'o' in "orange".</p>
                 </div>
 
                 <div class="current-word" id="currentWord">Ready to Start</div>
@@ -639,59 +653,51 @@
             perfectModule: { icon: '🌟', title: 'Perfectionist!', desc: 'Perfect score in a module!' },
             speedDemon: { icon: '🚀', title: 'Speed Demon!', desc: 'Completed 20 words!' },
             moduleComplete: { icon: '🏆', title: 'Module Master!', desc: 'Completed your first module!' },
-            cometComplete: { icon: '☄️', title: 'Comet Rider!', desc: 'Mastered the КОМЕТА group!' }
+            falseFriendsComplete: { icon: '⚠️', title: 'False Friends Master!', desc: 'Mastered the False Friends group!' }
         };
 
-        // Base URLs for GitHub content
-        const imageBaseUrl = 'https://raw.githubusercontent.com/kariwari13/russianpractice/main/images/';
-        const audioBaseUrl = 'https://raw.githubusercontent.com/kariwari13/russianpractice/main/audio/';
-
-        // Module data
+        // Module data for False Friends
         const modules = {
             1: {
-                letters: ['М', 'А'],
-                words: ['МАМА'],
-                instruction: "Module 1: Meet your first Russian letters М (M) and А (A). These letters look and sound very similar to English M and A!",
-                images: { 'МАМА': 'mama.jpg.png' }
+                letters: ['Р'],
+                words: ['МОТОР', 'МАРКА', 'КРЕМ', 'КАМЕРА', 'АРОМАТ', 'МЕТР', 'РОМ', 'КАРТА', 'ТЕАТР', 'МЕТРО', 'РАКЕТА', 'СЕКТОР'],
+                instruction: "Module 1: Р (pink like rose) = R sound. Don't be fooled - it looks like P but sounds like R!",
+                images: {}
             },
             2: {
-                letters: ['М', 'А', 'К'],
-                words: ['МАК', 'МАКАКА'],
-                instruction: "Module 2: Adding К (K). Now we can make more combinations! МАКАКА is monkey!",
-                images: { 
-                    'МАК': 'mac.jpg.png',
-                    'МАКАКА': 'monkey.jpg.png'
-                }
+                letters: ['Р', 'В'],
+                words: ['АВТОМАТ', 'ВИРУС', 'КВЕСТ', 'ВИНО', 'НЕРВ', 'АВТОР', 'ВЕКТОР', 'ЕВРО', 'ВИТАМИН', 'АКТИВ', 'СЕРВИС', 'ВАКУУМ'],
+                instruction: "Module 2: Adding В (violet) = V sound. В looks like B but sounds like V!",
+                images: {}
             },
             3: {
-                letters: ['М', 'А', 'К', 'О'],
-                words: ['КОМА', 'КАКАО', 'МОККО'],
-                instruction: "Module 3: Adding О (O). This Russian O sounds just like English O! КАКАО is cacao and МОККО is mocha!",
-                images: {
-                    'КАКАО': 'cacao.jpg.png'
-                }
+                letters: ['Р', 'В', 'Н'],
+                words: ['ТАНК', 'МОМЕНТ', 'МАНЕКЕН', 'АНКЕТА', 'ТОН', 'АНТЕННА', 'КОНТАКТ', 'ТОННА', 'КОНТРАКТ', 'ТРЕНЕР'],
+                instruction: "Module 3: Adding Н = N sound. Н looks like football goals - think 'Net!' when scored.",
+                images: {}
             },
             4: {
-                letters: ['М', 'А', 'К', 'О', 'Т'],
-                words: ['КОТ', 'ТОМ', 'АТОМ', 'ТОМАТ', 'АТАКА', 'АКТ', 'ТАКТ', 'МОТО'],
-                instruction: "Module 4: Adding Т (T). Now we're building real words! КОТ means 'cat', ТОМ is the name 'Tom', ТОМАТ means 'tomato', АКТ means 'act', ТАКТ means 'tact', and МОТО means 'moto'.",
-                images: { 
-                    'КОТ': 'cat.jpg.png',
-                    'ТОМ': 'tom-cat.jpg.png',
-                    'ТОМАТ': 'tomat.jpg.png', 
-                    'АТОМ': 'atom.jpg.png' 
-                }
+                letters: ['Р', 'В', 'Н', 'С'],
+                words: ['КОСМОС', 'МАСКА', 'ТЕСТ', 'ТЕКСТ', 'АСТМА', 'СТРЕСС', 'КОНТЕКСТ', 'МАСТЕР', 'РЕСТОРАН', 'ОРКЕСТР'],
+                instruction: "Module 4: Adding С = S sound. С is shaped like a snake - makes 'ssss' sound.",
+                images: {}
             },
             5: {
-                letters: ['М', 'А', 'К', 'О', 'Т', 'Е'],
-                words: ['МЕТА', 'ТЕМА', 'МЕМ', 'МЕККА', 'МАКЕТ', 'КОМЕТА'],
-                instruction: "Module 5: Adding Е (YE). Learn these advanced words! МЕМ means 'meme', МЕККА means 'Mecca', and МАКЕТ means 'maquette'.",
-                images: { 'КОМЕТА': 'comet.jpg.png' }
+                letters: ['Р', 'В', 'Н', 'С', 'И'],
+                words: ['МИКРОН', 'КОМИТЕТ', 'ТОКИО', 'МАТЕМАТИКА', 'АССИСТЕНТ', 'МЕКСИКА', 'ИНТЕРЕС', 'КЕРОСИН', 'МОНИТОР', 'РИТМ'],
+                instruction: "Module 5: Adding И = I sound. И looks like books (two standing, one across) - think 'image'.",
+                images: {}
             },
             6: {
-                letters: ['М', 'А', 'К', 'О', 'Т', 'Е'],
-                words: ['МА́МА', 'МЕ́ТА', 'ТЕ́МА', 'МЕ́ККА', 'МАКЕ́Т', 'МАКА́КА', 'АТА́КА', 'КОТ', 'ТОМ', 'АКТ', 'ТАКТ', 'ТОМА́Т', 'А́ТОМ', 'КО́МА', 'МО́ТО', 'МО́ККО'],
-                instruction: "Module 6: Stress Rules. Learn how stress changes pronunciation. Words with one vowel don't need stress marks. Notice how unstressed 'о' sounds like 'а', but stressed 'о' sounds like 'o' in 'orange'.",
+                letters: ['Р', 'В', 'Н', 'С', 'И', 'У'],
+                words: ['САКУРА', 'АКСЕССУАР', 'ИНСТИТУТ', 'НОТАРИУС', 'СИНУС', 'ТУР', 'ТАТУ', 'АКУСТИКА', 'КОНТУР', 'ТУРИСТ'],
+                instruction: "Module 6: Adding У = U sound. У looks like a slingshot - think 'shoot' sound.",
+                images: {}
+            },
+            7: {
+                letters: ['Р', 'В', 'Н', 'С', 'И', 'У', 'Х'],
+                words: ['ТЕХНИКА', 'ХРОМ', 'ХАОС', 'ХРОНОМЕТР', 'МОНАРХ', 'АРХИВ', 'ХИТ', 'ХИМЕРА', 'ХАКЕР', 'ХАРАКТЕР'],
+                instruction: "Module 7: Adding Х = H sound. Х is the cross you put 'HERE' - sign here!",
                 images: {}
             }
         };
@@ -749,11 +755,11 @@
             const congratulations = document.createElement('div');
             congratulations.className = 'final-message';
             congratulations.innerHTML = `
-                <h2>🎉 Congratulations! You've completed all modules!</h2>
-                <p>You've mastered the first letter group with stress understanding!</p>
-                <p>Ready for the next letter group: <strong>False Friends (P=R, H=N, C=S, etc.)</strong></p>
-                <p>These letters look familiar but sound different - it will be fun!</p>
-                <button class="control-btn" onclick="alert('False Friends module coming soon!')" style="margin-top: 15px;">Coming Soon: False Friends</button>
+                <h2>🎉 Congratulations! You've mastered False Friends!</h2>
+                <p>You've conquered the tricky letters that look familiar but sound different!</p>
+                <p>Ready for the next letter group: <strong>New Letters</strong></p>
+                <p>These letters are completely new but easier to remember!</p>
+                <button class="control-btn" onclick="alert('New Letters module coming soon!')" style="margin-top: 15px;">Coming Soon: New Letters</button>
             `;
             content.appendChild(congratulations);
         }
@@ -870,45 +876,13 @@
                 showStopButton();
                 
                 const cleanText = text.replace(/́/g, '').toLowerCase();
-                const audioUrl = `${audioBaseUrl}${cleanText}.mp3`;
-                console.log(`Trying to play audio: ${audioUrl}`);
                 
-                await playCustomAudio(audioUrl, text);
+                await playWebSpeechTTS(text);
                 
             } catch (error) {
                 console.error('Audio playback error:', error);
                 await playWebSpeechTTS(text);
             }
-        }
-
-        async function playCustomAudio(audioUrl, text) {
-            return new Promise((resolve, reject) => {
-                console.log(`Playing custom audio for: ${text}`);
-                
-                currentAudio = new Audio(audioUrl);
-                
-                currentAudio.onloadeddata = () => {
-                    console.log(`Custom audio loaded: ${text}`);
-                };
-                
-                currentAudio.onended = () => {
-                    console.log(`Custom audio ended: ${text}`);
-                    hideStopButton();
-                    resolve();
-                };
-                
-                currentAudio.onerror = (e) => {
-                    console.error(`Custom audio error for ${text}:`, e);
-                    hideStopButton();
-                    playWebSpeechTTS(text).then(resolve).catch(reject);
-                };
-                
-                currentAudio.play().catch((playError) => {
-                    console.error(`Audio play error for ${text}:`, playError);
-                    hideStopButton();
-                    playWebSpeechTTS(text).then(resolve).catch(reject);
-                });
-            });
         }
 
         async function playWebSpeechTTS(text) {
@@ -955,17 +929,17 @@
                 
                 if (selectedVoice) {
                     utterance.voice = selectedVoice;
-                    console.log('Using Web Speech fallback voice:', selectedVoice.name);
+                    console.log('Using Web Speech voice:', selectedVoice.name);
                 }
 
-                utterance.onstart = () => console.log('Web Speech fallback started');
+                utterance.onstart = () => console.log('Web Speech started');
                 utterance.onend = () => {
-                    console.log('Web Speech fallback ended');
+                    console.log('Web Speech ended');
                     hideStopButton();
                 };
                 utterance.onerror = (event) => {
                     if (event.error !== 'interrupted') {
-                        console.error('Web Speech fallback error:', event.error);
+                        console.error('Web Speech error:', event.error);
                     }
                     hideStopButton();
                 };
@@ -981,7 +955,7 @@
                 speechSynthesis.speak(utterance);
 
             } catch (error) {
-                console.error('Web Speech fallback error:', error);
+                console.error('Web Speech error:', error);
                 hideStopButton();
                 throw error;
             }
@@ -1038,10 +1012,7 @@
             }
 
             try {
-                recognition.abort();
-                setTimeout(() => {
-                    recognition.start();
-                }, 100);
+                recognition.start();
             } catch (error) {
                 console.error('Recognition start error:', error);
                 showFeedback('Could not start recording', 'error');
@@ -1198,34 +1169,34 @@
             updateButtons();
             updateProgress();
             updateExerciseDisplay();
-            
-            if (moduleNum === 6) {
-                document.getElementById('stressExplanation').classList.remove('hidden');
-            } else {
-                document.getElementById('stressExplanation').classList.add('hidden');
-            }
         }
 
         function displayCurrentWord() {
             const word = modules[currentModule].words[currentWordIndex];
-            document.getElementById('currentWord').textContent = word;
+            const wordElement = document.getElementById('currentWord');
             
-            const wordImage = document.getElementById('wordImage');
-            if (modules[currentModule].images[word]) {
-                wordImage.src = imageBaseUrl + modules[currentModule].images[word];
-                wordImage.classList.remove('hidden');
-                
-                wordImage.onerror = () => {
-                    console.log('Image failed to load:', imageBaseUrl + modules[currentModule].images[word]);
-                    wordImage.classList.add('hidden');
-                };
-            } else {
-                wordImage.classList.add('hidden');
-            }
+            // Apply color styling to Р and В in words
+            let styledWord = word.replace(/Р/g, '<span class="letter-p">Р</span>')
+                                .replace(/В/g, '<span class="letter-v">В</span>');
+            
+            wordElement.innerHTML = styledWord;
         }
 
         function updateLettersDisplay() {
-            document.getElementById('currentLetters').textContent = modules[currentModule].letters.join('  ');
+            const lettersElement = document.getElementById('currentLetters');
+            const letters = modules[currentModule].letters;
+            
+            let lettersHTML = letters.map(letter => {
+                if (letter === 'Р') {
+                    return `<span class="letter-p">${letter}</span>`;
+                } else if (letter === 'В') {
+                    return `<span class="letter-v">${letter}</span>`;
+                } else {
+                    return letter;
+                }
+            }).join('  ');
+            
+            lettersElement.innerHTML = lettersHTML;
         }
 
         function updateInstructionArea() {
@@ -1265,7 +1236,7 @@
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             initSpeechRecognition();
-            console.log('Russian Learning Platform initialized');
+            console.log('Russian False Friends Platform initialized');
             
             document.addEventListener('click', function() {
                 if (currentAudio && currentAudio.paused) {
@@ -1280,5 +1251,3 @@
     </script>
 </body>
 </html>
-
-
